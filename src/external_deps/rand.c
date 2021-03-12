@@ -65,7 +65,7 @@ int get_random(unsigned char *buf, u16 len)
 }
 
 /* Windows case */
-#elif defined(WITH_STDLIB) && defined(__WIN32__)
+#elif defined(WITH_STDLIB) && defined(WIN32)
 #include <windows.h>
 #include <wincrypt.h>
 

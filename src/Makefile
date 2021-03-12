@@ -21,7 +21,7 @@ all: libecc$(PFX).lib
 # it seems that wdk7 don`t have lib.exe so I used one from vs2017
 # change path of lib.exe
 libecc$(PFX).lib: $(SOURCES:.c=.obj)
-	D:\sdk\vs2017\VC\bin\lib.exe /NODEFAULTLIB /nologo /out:build/libecc$(PFX).lib *.obj
+	D:\sdk\vs2017\VC\bin\lib.exe /NODEFAULTLIB /nologo /out:../build/libecc$(PFX).lib *.obj
 
 clean:
 	@del -f *.obj

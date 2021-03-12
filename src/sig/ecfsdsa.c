@@ -586,7 +586,7 @@ int _ecfsdsa_verify_finalize(struct ec_verify_context *ctx)
 	prj_pt_src_t G, Y;
 	nn_src_t q;
 	nn tmp, tmp2, e, *s;
-	prj_pt sG, eY, Wprime;
+	prj_pt *sG = NULL, *eY, *Wprime;
 	bitcnt_t p_bit_len, r_len;
 	aff_pt Wprime_aff;
 	u8 r_prime[2 * NN_MAX_BYTE_LEN];
@@ -603,9 +603,17 @@ int _ecfsdsa_verify_finalize(struct ec_verify_context *ctx)
 	SIG_VERIFY_CHECK_INITIALIZED(ctx);
 	ECFSDSA_VERIFY_CHECK_INITIALIZED(&(ctx->verify_data.ecfsdsa));
 
+	sG = (prj_pt *)g_buf_alloc(3 * sizeof(prj_pt));
+	if ( NULL == sG )
+        {
+		ret = -1;
+		goto err;
+	}
+	eY = sG + 1;
+        Wprime = eY + 1;
         /* Zero init points */
-        local_memset(&sG, 0, sizeof(prj_pt));
-        local_memset(&eY, 0, sizeof(prj_pt));
+        local_memset(sG, 0, sizeof(prj_pt));
+        local_memset(eY, 0, sizeof(prj_pt));
 
 	/* Make things more readable */
 	G = &(ctx->pub_key->params->ec_gen);
@@ -644,14 +652,14 @@ int _ecfsdsa_verify_finalize(struct ec_verify_context *ctx)
 	nn_uninit(&tmp2);
 
 	/* 5. compute W' = (W'_x,W'_y) = sG + tY, where Y is the public key */
-	prj_pt_mul_monty(&sG, s, G);
-	prj_pt_mul_monty(&eY, &e, Y);
+	prj_pt_mul_monty(sG, s, G);
+	prj_pt_mul_monty(eY, &e, Y);
 	nn_uninit(&e);
-	prj_pt_add_monty(&Wprime, &sG, &eY);
-	prj_pt_uninit(&sG);
-	prj_pt_uninit(&eY);
-	prj_pt_to_aff(&Wprime_aff, &Wprime);
-	prj_pt_uninit(&Wprime);
+	prj_pt_add_monty(Wprime, sG, eY);
+	prj_pt_uninit(sG);
+	prj_pt_uninit(eY);
+	prj_pt_to_aff(&Wprime_aff, Wprime);
+	prj_pt_uninit(Wprime);
 
 	/* 6. Compute r' = FE2OS(W'_x)||FE2OS(W'_y) */
 	fp_export_to_buf(r_prime, p_len, &(Wprime_aff.x));
@@ -661,7 +669,7 @@ int _ecfsdsa_verify_finalize(struct ec_verify_context *ctx)
 	dbg_buf_print("r_prime: ", r_prime, r_len);
 
 	/* 7. Accept the signature if and only if r equals r' */
-	ret = are_equal(r, r_prime, r_len) ? 0 : -1;
+  	ret = are_equal(r, r_prime, r_len) ? 0 : -1;
 	local_memset(r_prime, 0, r_len);
 
 	/*
@@ -682,6 +690,8 @@ int _ecfsdsa_verify_finalize(struct ec_verify_context *ctx)
 	VAR_ZEROIFY(hsize);
 
 err:
+        if ( sG != NULL )
+          g_buf_free(sG);
 	return ret;
 }
 

@@ -533,7 +533,7 @@ int _ecdsa_verify_update(struct ec_verify_context *ctx,
 
 int _ecdsa_verify_finalize(struct ec_verify_context *ctx)
 {
-	prj_pt uG, vY, W_prime;
+	prj_pt *uG = NULL, *vY, *W_prime;
 	nn e, tmp, sinv, u, v, r_prime;
 	aff_pt W_prime_aff;
 	prj_pt_src_t G, Y;
@@ -552,9 +552,17 @@ int _ecdsa_verify_finalize(struct ec_verify_context *ctx)
 	SIG_VERIFY_CHECK_INITIALIZED(ctx);
 	ECDSA_VERIFY_CHECK_INITIALIZED(&(ctx->verify_data.ecdsa));
 
+	uG = (prj_pt *)g_buf_alloc(3 * sizeof(prj_pt));
+	if ( uG == NULL )
+	{
+		ret = -1;
+		goto err;
+	}
+        vY = uG + 1;
+        W_prime = vY + 1;
 	/* Zero init points */
-	local_memset(&uG, 0, sizeof(prj_pt));
-	local_memset(&vY, 0, sizeof(prj_pt));
+	local_memset(uG, 0, sizeof(prj_pt));
+	local_memset(vY, 0, sizeof(prj_pt));
 
 	/* Make things more readable */
 	G = &(ctx->pub_key->params->ec_gen);
@@ -623,30 +631,30 @@ int _ecdsa_verify_finalize(struct ec_verify_context *ctx)
 	nn_uninit(&tmp);
 
 	/* 7. Compute W' = uG + vY */
-	prj_pt_mul_monty(&uG, &u, G);
-	prj_pt_mul_monty(&vY, &v, Y);
-	prj_pt_add_monty(&W_prime, &uG, &vY);
-	prj_pt_uninit(&uG);
-	prj_pt_uninit(&vY);
+	prj_pt_mul_monty(uG, &u, G);
+	prj_pt_mul_monty(vY, &v, Y);
+	prj_pt_add_monty(W_prime, uG, vY);
+	prj_pt_uninit(uG);
+	prj_pt_uninit(vY);
 	nn_uninit(&u);
 	nn_uninit(&v);
 
 	/* 8. If W' is the point at infinity, reject the signature. */
-	if (prj_pt_iszero(&W_prime)) {
+	if (prj_pt_iszero(W_prime)) {
 		ret = -1;
 		goto err;
 	}
 
 	/* 9. Compute r' = W'_x mod q */
-	prj_pt_to_aff(&W_prime_aff, &W_prime);
+	prj_pt_to_aff(&W_prime_aff, W_prime);
 	dbg_nn_print("W'_x", &(W_prime_aff.x.fp_val));
 	dbg_nn_print("W'_y", &(W_prime_aff.y.fp_val));
 	nn_mod(&r_prime, &(W_prime_aff.x.fp_val), q);
-	prj_pt_uninit(&W_prime);
+	prj_pt_uninit(W_prime);
 	aff_pt_uninit(&W_prime_aff);
 
 	/* 10. Accept the signature if and only if r equals r' */
-	ret = (nn_cmp(&r_prime, r) != 0) ? -1 : 0;
+  	ret = (nn_cmp(&r_prime, r) != 0) ? -1 : 0;
 	nn_uninit(&r_prime);
 
  err:
@@ -665,6 +673,9 @@ int _ecdsa_verify_finalize(struct ec_verify_context *ctx)
 	PTR_NULLIFY(s);
 	PTR_NULLIFY(r);
 	VAR_ZEROIFY(hsize);
+
+        if ( uG != NULL )
+          g_buf_free(uG);
 
 	return ret;
 }

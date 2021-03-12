@@ -14,6 +14,8 @@
  *  See LICENSE file at the root folder of the project.
  */
 #include "../lib_ecc_config.h"
+#include "sig_algs_internal.h"
+
 #if (defined(WITH_SIG_ECSDSA) || defined(WITH_SIG_ECOSDSA))
 
 #include "../nn/nn_rand.h"
@@ -21,7 +23,6 @@
 #include "../nn/nn_logical.h"
 
 #include "ecsdsa_common.h"
-#include "sig_algs_internal.h"
 #include "ec_key.h"
 #ifdef VERBOSE_INNER_VALUES
 #define EC_SIG_ALG "EC[O]SDSA"
@@ -446,7 +447,7 @@ int __ecsdsa_verify_init(struct ec_verify_context *ctx,
 	const ec_pub_key *pub_key;
 	nn_src_t q;
 	nn rmodq, e, r, s;
-	prj_pt sG, eY, Wprime;
+	prj_pt *sG = NULL, *eY, *Wprime;
 	u8 Wprimex[BYTECEIL(CURVES_MAX_P_BIT_LEN)];
 	u8 Wprimey[BYTECEIL(CURVES_MAX_P_BIT_LEN)];
 	u8 p_len, r_len, s_len;
@@ -458,9 +459,17 @@ int __ecsdsa_verify_init(struct ec_verify_context *ctx,
 	/* First, verify context has been initialized */
 	SIG_VERIFY_CHECK_INITIALIZED(ctx);
 
+	sG = (prj_pt *)g_buf_alloc(3 * sizeof(prj_pt));
+	if ( sG == NULL )
+	{
+		ret = -1;
+		goto err;
+	}
+        eY = sG + 1;
+        Wprime = eY + 1;
         /* Zero init points */
-        local_memset(&sG, 0, sizeof(prj_pt));
-        local_memset(&eY, 0, sizeof(prj_pt));
+        local_memset(sG, 0, sizeof(prj_pt));
+        local_memset(eY, 0, sizeof(prj_pt));
 
 	/* Do some sanity checks on input params */
 	pub_key_check_initialized_and_type(ctx->pub_key, key_type);
@@ -516,14 +525,14 @@ int __ecsdsa_verify_init(struct ec_verify_context *ctx,
 	}
 
 	/* 4. Compute W' = sG + eY */
-	prj_pt_mul_monty(&sG, &s, G);
-	prj_pt_mul_monty(&eY, &e, Y);
+	prj_pt_mul_monty(sG, &s, G);
+	prj_pt_mul_monty(eY, &e, Y);
 	nn_zero(&e);
-	prj_pt_add_monty(&Wprime, &sG, &eY);
-	prj_pt_to_aff(&Wprime_aff, &Wprime);
-	prj_pt_uninit(&sG);
-	prj_pt_uninit(&eY);
-	prj_pt_uninit(&Wprime);
+	prj_pt_add_monty(Wprime, sG, eY);
+	prj_pt_to_aff(&Wprime_aff, Wprime);
+	prj_pt_uninit(sG);
+	prj_pt_uninit(eY);
+	prj_pt_uninit(Wprime);
 
 	/*
 	 * 5. Compute r' = H(W'x [|| W'y] || m)
@@ -578,6 +587,9 @@ int __ecsdsa_verify_init(struct ec_verify_context *ctx,
 	VAR_ZEROIFY(q_bit_len);
 	VAR_ZEROIFY(hsize);
 
+        if ( sG != NULL )
+          g_buf_free(sG);
+
 	return ret;
 }
 
@@ -629,7 +641,7 @@ int __ecsdsa_verify_finalize(struct ec_verify_context *ctx)
 	ctx->h->hfunc_finalize(&(ctx->verify_data.ecsdsa.h_ctx), r_prime);
 
 	/* 6. Accept the signature if and only if r and r' are the same */
-	ret = are_equal(ctx->verify_data.ecsdsa.r, r_prime, r_len) ? 0 : -1;
+        ret = are_equal(ctx->verify_data.ecsdsa.r, r_prime, r_len) ? 0 : -1;
 	local_memset(r_prime, 0, r_len);
 
 	/*

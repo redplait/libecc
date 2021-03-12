@@ -472,7 +472,7 @@ int _ecrdsa_verify_finalize(struct ec_verify_context *ctx)
 	prj_pt_src_t G, Y;
 	nn_src_t q;
 	nn tmp, h, r_prime, e, v, u;
-	prj_pt vY, uG, Wprime;
+	prj_pt *vY = NULL, *uG, *Wprime;
 	aff_pt Wprime_aff;
 	u8 h_buf[MAX_DIGEST_SIZE];
 	nn *r, *s;
@@ -487,9 +487,17 @@ int _ecrdsa_verify_finalize(struct ec_verify_context *ctx)
 	SIG_VERIFY_CHECK_INITIALIZED(ctx);
 	ECRDSA_VERIFY_CHECK_INITIALIZED(&(ctx->verify_data.ecrdsa));
 
+	vY = (prj_pt *)g_buf_alloc(3 * sizeof(prj_pt));
+	if ( vY == NULL )
+        {
+           ret = -1;
+           goto err;
+        }
+        uG = vY + 1;
+        Wprime = uG + 1;
         /* Zero init points */
-        local_memset(&uG, 0, sizeof(prj_pt));
-        local_memset(&vY, 0, sizeof(prj_pt));
+        local_memset(uG, 0, sizeof(prj_pt));
+        local_memset(vY, 0, sizeof(prj_pt));
 
 	/* Make things more readable */
 	G = &(ctx->pub_key->params->ec_gen);
@@ -539,15 +547,15 @@ int _ecrdsa_verify_finalize(struct ec_verify_context *ctx)
 	nn_zero(&tmp);
 
 	/* 6. Compute W' = uG + vY = (W'_x, W'_y) */
-	prj_pt_mul_monty(&uG, &u, G);
-	prj_pt_mul_monty(&vY, &v, Y);
+	prj_pt_mul_monty(uG, &u, G);
+	prj_pt_mul_monty(vY, &v, Y);
 	nn_zero(&u);
 	nn_zero(&v);
-	prj_pt_add_monty(&Wprime, &uG, &vY);
-	prj_pt_uninit(&uG);
-	prj_pt_uninit(&vY);
-	prj_pt_to_aff(&Wprime_aff, &Wprime);
-	prj_pt_uninit(&Wprime);
+	prj_pt_add_monty(Wprime, uG, vY);
+	prj_pt_uninit(uG);
+	prj_pt_uninit(vY);
+	prj_pt_to_aff(&Wprime_aff, Wprime);
+	prj_pt_uninit(Wprime);
 	dbg_nn_print("W'_x", &(Wprime_aff.x.fp_val));
 	dbg_nn_print("W'_y", &(Wprime_aff.y.fp_val));
 
@@ -575,6 +583,8 @@ int _ecrdsa_verify_finalize(struct ec_verify_context *ctx)
 	VAR_ZEROIFY(hsize);
 
 err:
+        if ( vY != NULL )
+          g_buf_free(vY);
 	return ret;
 }
 

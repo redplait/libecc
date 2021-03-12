@@ -38,7 +38,7 @@ int get_ms_time(u64 *time)
 }
 
 /* Windows case */
-#elif defined(WITH_STDLIB) && defined(__WIN32__)
+#elif defined(WITH_STDLIB) && defined(WIN32)
 #include <stddef.h>
 #include <windows.h>
 int get_ms_time(u64 *time)
