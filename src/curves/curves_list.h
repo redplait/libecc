@@ -59,40 +59,40 @@ typedef struct {
 
 static const ec_mapping ec_maps[] = {
 #ifdef WITH_CURVE_FRP256V1
-	{.type = FRP256V1,.params = &frp256v1_str_params},
+	{FRP256V1, &frp256v1_str_params},
 #endif /* WITH_CURVE_FRP256V1 */
 #ifdef WITH_CURVE_SECP192R1
-	{.type = SECP192R1,.params = &secp192r1_str_params},
+	{ SECP192R1, &secp192r1_str_params},
 #endif /* WITH_CURVE_SECP192R1 */
 #ifdef WITH_CURVE_SECP224R1
-	{.type = SECP224R1,.params = &secp224r1_str_params},
+	{ SECP224R1, &secp224r1_str_params},
 #endif /* WITH_CURVE_SECP224R1 */
 #ifdef WITH_CURVE_SECP256R1
-	{.type = SECP256R1,.params = &secp256r1_str_params},
+	{ SECP256R1, &secp256r1_str_params},
 #endif /* WITH_CURVE_SECP256R1 */
 #ifdef WITH_CURVE_SECP384R1
-	{.type = SECP384R1,.params = &secp384r1_str_params},
+	{ SECP384R1, &secp384r1_str_params},
 #endif /* WITH_CURVE_SECP384R1 */
 #ifdef WITH_CURVE_SECP521R1
-	{.type = SECP521R1,.params = &secp521r1_str_params},
+	{ SECP521R1, &secp521r1_str_params},
 #endif /* WITH_CURVE_SECP521R1 */
 #ifdef WITH_CURVE_BRAINPOOLP224R1
-	{.type = BRAINPOOLP224R1,.params = &brainpoolp224r1_str_params},
+	{ BRAINPOOLP224R1, &brainpoolp224r1_str_params},
 #endif /* WITH_CURVE_BRAINPOOLP224R1 */
 #ifdef WITH_CURVE_BRAINPOOLP256R1
-	{.type = BRAINPOOLP256R1,.params = &brainpoolp256r1_str_params},
+	{ BRAINPOOLP256R1, &brainpoolp256r1_str_params},
 #endif /* WITH_CURVE_BRAINPOOLP256R1 */
 #ifdef WITH_CURVE_BRAINPOOLP384R1
-	{.type = BRAINPOOLP384R1,.params = &brainpoolp384r1_str_params},
+	{ BRAINPOOLP384R1, &brainpoolp384r1_str_params},
 #endif /* WITH_CURVE_BRAINPOOLP384R1 */
 #ifdef WITH_CURVE_BRAINPOOLP512R1
-	{.type = BRAINPOOLP512R1,.params = &brainpoolp512r1_str_params},
+	{ BRAINPOOLP512R1, &brainpoolp512r1_str_params},
 #endif /* WITH_CURVE_BRAINPOOLP512R1 */
 #ifdef WITH_CURVE_GOST256
-	{.type = GOST256,.params = &GOST_256bits_curve_str_params},
+	{ GOST256, &GOST_256bits_curve_str_params},
 #endif /* WITH_CURVE_GOST256 */
 #ifdef WITH_CURVE_GOST512
-	{.type = GOST512,.params = &GOST_512bits_curve_str_params},
+	{ GOST512, &GOST_512bits_curve_str_params},
 #endif /* WITH_CURVE_GOST512 */
 /* ADD curves mapping here */
 /* XXX: Do not remove the comment above, as it is

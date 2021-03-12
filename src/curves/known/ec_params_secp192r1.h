@@ -239,6 +239,27 @@ static const u8 secp192r1_oid[] = "1.2.840.10045.3.1.1";
 TO_EC_STR_PARAM(secp192r1_oid);
 
 static const ec_str_params secp192r1_str_params = {
+#ifdef WIN32
+ &secp192r1_p_str_param,
+ &secp192r1_p_bitlen_str_param,
+ &secp192r1_r_str_param,
+ &secp192r1_r_square_str_param,
+ &secp192r1_mpinv_str_param,
+ &secp192r1_p_shift_str_param,
+ &secp192r1_p_normalized_str_param,
+ &secp192r1_p_reciprocal_str_param,
+ &secp192r1_a_str_param,
+ &secp192r1_b_str_param,
+ &secp192r1_npoints_str_param,
+ &secp192r1_gx_str_param,
+ &secp192r1_gy_str_param,
+ &secp192r1_gz_str_param,
+ &secp192r1_order_str_param,
+ &secp192r1_order_bitlen_str_param,
+ &secp192r1_cofactor_str_param,
+ &secp192r1_oid_str_param,
+ &secp192r1_name_str_param,
+#else
 	.p = &secp192r1_p_str_param,
 	.p_bitlen = &secp192r1_p_bitlen_str_param,
 	.r = &secp192r1_r_str_param,
@@ -258,6 +279,7 @@ static const ec_str_params secp192r1_str_params = {
 	.cofactor = &secp192r1_cofactor_str_param,
 	.oid = &secp192r1_oid_str_param,
 	.name = &secp192r1_name_str_param,
+#endif /* WIN32 */
 };
 
 /*

@@ -18,7 +18,7 @@
 /*
  * Perform Montgomery multiplication.
  */
-static inline void _fp_mul_redc1(nn_t out, nn_src_t in1, nn_src_t in2,
+static /* inline */ void _fp_mul_redc1(nn_t out, nn_src_t in1, nn_src_t in2,
 				 fp_ctx_src_t ctx)
 {
 	nn_mul_redc1(out, in1, in2, &(ctx->p), ctx->mpinv);

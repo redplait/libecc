@@ -24,8 +24,8 @@ typedef struct {
 
 #define TO_EC_STR_PARAM(pname) \
 	static const ec_str_param pname##_str_param = { \
-		.buf = pname,				\
-		.buflen = sizeof(pname)                 \
+		pname,				\
+		sizeof(pname)                 \
 	}
 
 #define PARAM_BUF_LEN(param) ((param)->buflen)

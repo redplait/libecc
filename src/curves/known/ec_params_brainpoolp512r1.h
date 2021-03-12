@@ -204,6 +204,27 @@ static const u8 brainpoolp512r1_name[] = "BRAINPOOLP512R1";
 TO_EC_STR_PARAM(brainpoolp512r1_name);
 
 static const ec_str_params brainpoolp512r1_str_params = {
+#ifdef WIN32
+  &brainpoolp512r1_p_str_param,
+  &brainpoolp512r1_p_bitlen_str_param,
+  &brainpoolp512r1_r_str_param,
+  &brainpoolp512r1_r_square_str_param,
+  &brainpoolp512r1_mpinv_str_param,
+  &brainpoolp512r1_p_shift_str_param,
+  &brainpoolp512r1_p_str_param,
+  &brainpoolp512r1_p_reciprocal_str_param,
+  &brainpoolp512r1_a_str_param,
+  &brainpoolp512r1_b_str_param,
+  &brainpoolp512r1_npoints_str_param,
+  &brainpoolp512r1_gx_str_param,
+  &brainpoolp512r1_gy_str_param,
+  &brainpool512r1_gz_str_param,
+  &brainpoolp512r1_order_str_param,
+  &brainpoolp512r1_order_bitlen_str_param,
+  &brainpoolp512r1_cofactor_str_param,
+  &brainpoolp512r1_oid_str_param,
+  &brainpoolp512r1_name_str_param,
+#else
 	.p = &brainpoolp512r1_p_str_param,
 	.p_bitlen = &brainpoolp512r1_p_bitlen_str_param,
 	.r = &brainpoolp512r1_r_str_param,
@@ -223,6 +244,7 @@ static const ec_str_params brainpoolp512r1_str_params = {
 	.cofactor = &brainpoolp512r1_cofactor_str_param,
 	.oid = &brainpoolp512r1_oid_str_param,
 	.name = &brainpoolp512r1_name_str_param,
+#endif /* WIN32 */
 };
 
 /*

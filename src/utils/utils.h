@@ -91,7 +91,7 @@ char *local_strncpy(char *dst, const char *src, u32 n);
 char *local_strncat(char *dest, const char *src, u32 n);
 
 /* Return 1 if architecture is big endian, 0 otherwise. */
-static inline int arch_is_big_endian(void)
+static /* inline */ int arch_is_big_endian(void)
 {
 	const u16 val = 0x0102;
 	const u8 *buf = (const u8 *)(&val);

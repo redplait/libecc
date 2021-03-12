@@ -240,7 +240,7 @@ int nn_modinv(nn_t out, nn_src_t x, nn_src_t m)
  * No assumption on A and B such as A >= B.
  * Done in *constant time*.
  */
-static inline void nn_sub_mod_2exp(nn_t A, nn_src_t B)
+static /* inline */ void nn_sub_mod_2exp(nn_t A, nn_src_t B)
 {
 	u8 Awlen = A->wlen;
 	nn_set_wlen(A, Awlen + 1);

@@ -151,7 +151,7 @@ ATTRIBUTE_USED void CONCATENATE(nn_consistency_check_maxbitlen, NN_MAX_BASE,
 	return;
 }
 #else
-ATTRIBUTE_USED static inline void nn_check_libconsistency(void)
+ATTRIBUTE_USED static /* inline */ void nn_check_libconsistency(void)
 {
 	CONCATENATE(nn_consistency_check_maxbitlen, NN_MAX_BASE, wordsize,
 		    WORDSIZE, complete_formulas) ();

@@ -160,6 +160,27 @@ static const u8 frp256v1_name[] = "FRP256V1";
 TO_EC_STR_PARAM(frp256v1_name);
 
 static const ec_str_params frp256v1_str_params = {
+#ifdef WIN32
+ &frp256v1_p_str_param,
+ &frp256v1_p_bitlen_str_param,
+ &frp256v1_r_str_param,
+ &frp256v1_r_square_str_param,
+ &frp256v1_mpinv_str_param,
+ &frp256v1_p_shift_str_param,
+ &frp256v1_p_str_param,
+ &frp256v1_p_reciprocal_str_param,
+ &frp256v1_a_str_param,
+ &frp256v1_b_str_param,
+ &frp256v1_npoints_str_param,
+ &frp256v1_gx_str_param,
+ &frp256v1_gy_str_param,
+ &frp256v1_gz_str_param,
+ &frp256v1_order_str_param,
+ &frp256v1_order_bitlen_str_param,
+ &frp256v1_cofactor_str_param,
+ &frp256v1_oid_str_param,
+ &frp256v1_name_str_param,
+#else
 	.p = &frp256v1_p_str_param,
 	.p_bitlen = &frp256v1_p_bitlen_str_param,
 	.r = &frp256v1_r_str_param,
@@ -179,6 +200,7 @@ static const ec_str_params frp256v1_str_params = {
 	.cofactor = &frp256v1_cofactor_str_param,
 	.oid = &frp256v1_oid_str_param,
 	.name = &frp256v1_name_str_param,
+#endif /* WIN32 */
 };
 
 /*

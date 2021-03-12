@@ -213,6 +213,27 @@ static const u8 GOST_512bits_curve_name[] = "GOST512";
 TO_EC_STR_PARAM(GOST_512bits_curve_name);
 
 static const ec_str_params GOST_512bits_curve_str_params = {
+#ifdef WIN32
+ &GOST_512bits_curve_p_str_param,
+ &GOST_512bits_curve_p_bitlen_str_param,
+ &GOST_512bits_curve_r_str_param,
+ &GOST_512bits_curve_r_square_str_param,
+ &GOST_512bits_curve_mpinv_str_param,
+ &GOST_512bits_curve_p_shift_str_param,
+ &GOST_512bits_curve_p_normalized_str_param,
+ &GOST_512bits_curve_p_reciprocal_str_param,
+ &GOST_512bits_curve_a_str_param,
+ &GOST_512bits_curve_b_str_param,
+ &GOST_512bits_curve_npoints_str_param,
+ &GOST_512bits_curve_gx_str_param,
+ &GOST_512bits_curve_gy_str_param,
+ &GOST_512bits_curve_gz_str_param,
+ &GOST_512bits_curve_order_str_param,
+ &GOST_512bits_curve_order_bitlen_str_param,
+ &GOST_512bits_curve_cofactor_str_param,
+ &GOST_512bits_curve_oid_str_param,
+ &GOST_512bits_curve_name_str_param,
+#else
 	.p = &GOST_512bits_curve_p_str_param,
 	.p_bitlen = &GOST_512bits_curve_p_bitlen_str_param,
 	.r = &GOST_512bits_curve_r_str_param,
@@ -232,6 +253,7 @@ static const ec_str_params GOST_512bits_curve_str_params = {
 	.cofactor = &GOST_512bits_curve_cofactor_str_param,
 	.oid = &GOST_512bits_curve_oid_str_param,
 	.name = &GOST_512bits_curve_name_str_param,
+#endif /* WIN32 */
 };
 
 /*

@@ -192,6 +192,27 @@ static const u8 brainpoolp384r1_name[] = "BRAINPOOLP384R1";
 TO_EC_STR_PARAM(brainpoolp384r1_name);
 
 static const ec_str_params brainpoolp384r1_str_params = {
+#ifdef WIN32
+  &brainpoolp384r1_p_str_param,
+  &brainpoolp384r1_p_bitlen_str_param,
+  &brainpoolp384r1_r_str_param,
+  &brainpoolp384r1_r_square_str_param,
+  &brainpoolp384r1_mpinv_str_param,
+  &brainpoolp384r1_p_shift_str_param,
+  &brainpoolp384r1_p_str_param,
+  &brainpoolp384r1_p_reciprocal_str_param,
+  &brainpoolp384r1_a_str_param,
+  &brainpoolp384r1_b_str_param,
+  &brainpoolp384r1_npoints_str_param,
+  &brainpoolp384r1_gx_str_param,
+  &brainpoolp384r1_gy_str_param,
+  &brainpoolp384r1_gz_str_param,
+  &brainpoolp384r1_order_str_param,
+  &brainpoolp384r1_order_bitlen_str_param,
+  &brainpoolp384r1_cofactor_str_param,
+  &brainpoolp384r1_oid_str_param,
+  &brainpoolp384r1_name_str_param,
+#else
 	.p = &brainpoolp384r1_p_str_param,
 	.p_bitlen = &brainpoolp384r1_p_bitlen_str_param,
 	.r = &brainpoolp384r1_r_str_param,
@@ -211,6 +232,7 @@ static const ec_str_params brainpoolp384r1_str_params = {
 	.cofactor = &brainpoolp384r1_cofactor_str_param,
 	.oid = &brainpoolp384r1_oid_str_param,
 	.name = &brainpoolp384r1_name_str_param,
+#endif /* WIN32 */
 };
 
 /*

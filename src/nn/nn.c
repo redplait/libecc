@@ -359,7 +359,7 @@ static word_t ntohw(const u8 *val)
  * from host order to network (big endian) order.
  * 'val' need not point to a word-aligned region.
  */
-static inline word_t htonw(const u8 *val)
+static /* inline */ word_t htonw(const u8 *val)
 {
 	return ntohw(val);
 }

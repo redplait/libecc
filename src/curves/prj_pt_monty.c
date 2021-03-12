@@ -646,17 +646,21 @@ static void _prj_pt_mul_ltr_monty_ladder(prj_pt_t out, nn_src_t m, prj_pt_src_t 
 	nn_sqr(&order_square, &(in->crv->order));
 	/* Then compute m' depending on m size */
 	if(nn_cmp(m, &(in->crv->order)) < 0){
+                bitcnt_t msb_bit_len;
+                bitcnt_t order_bitlen;
 		/* Case where m < q */
 		nn_add(&m_msb_fixed, m, &(in->crv->order));
-		bitcnt_t msb_bit_len = nn_bitlen(&m_msb_fixed);
-		bitcnt_t order_bitlen = nn_bitlen(&(in->crv->order));
+		msb_bit_len = nn_bitlen(&m_msb_fixed);
+		order_bitlen = nn_bitlen(&(in->crv->order));
 		nn_cnd_add((msb_bit_len == order_bitlen), &m_msb_fixed, &m_msb_fixed, &(in->crv->order));
 	}
 	else if(nn_cmp(m, &order_square) < 0){
+                bitcnt_t msb_bit_len;
+                bitcnt_t order_square_bitlen;
 		/* Case where m >= q and m < (q**2) */
 		nn_add(&m_msb_fixed, m, &order_square);
-		bitcnt_t msb_bit_len = nn_bitlen(&m_msb_fixed);
-		bitcnt_t order_square_bitlen = nn_bitlen(&order_square);
+		msb_bit_len = nn_bitlen(&m_msb_fixed);
+		order_square_bitlen = nn_bitlen(&order_square);
 		nn_cnd_add((msb_bit_len == order_square_bitlen), &m_msb_fixed, &m_msb_fixed, &order_square);
 
 	}

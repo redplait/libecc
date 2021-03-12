@@ -154,6 +154,27 @@ static const u8 secp256r1_name[] = "SECP256R1";
 TO_EC_STR_PARAM(secp256r1_name);
 
 static const ec_str_params secp256r1_str_params = {
+#ifdef WIN32
+ &secp256r1_p_str_param,
+ &secp256r1_p_bitlen_str_param,
+ &secp256r1_r_str_param,
+ &secp256r1_r_square_str_param,
+ &secp256r1_mpinv_str_param,
+ &secp256r1_p_shift_str_param,
+ &secp256r1_p_str_param,
+ &secp256r1_p_reciprocal_str_param,
+ &secp256r1_a_str_param,
+ &secp256r1_b_str_param,
+ &secp256r1_npoints_str_param,
+ &secp256r1_gx_str_param,
+ &secp256r1_gy_str_param,
+ &secp256r1_gz_str_param,
+ &secp256r1_order_str_param,
+ &secp256r1_order_bitlen_str_param,
+ &secp256r1_cofactor_str_param,
+ &secp256r1_oid_str_param,
+ &secp256r1_name_str_param,
+#else
 	.p = &secp256r1_p_str_param,
 	.p_bitlen = &secp256r1_p_bitlen_str_param,
 	.r = &secp256r1_r_str_param,
@@ -173,6 +194,7 @@ static const ec_str_params secp256r1_str_params = {
 	.cofactor = &secp256r1_cofactor_str_param,
 	.oid = &secp256r1_oid_str_param,
 	.name = &secp256r1_name_str_param,
+#endif /* WIN32 */
 };
 
 /*
