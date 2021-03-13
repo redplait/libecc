@@ -6,7 +6,7 @@ C_DEFINES=$(C_DEFINES) -DWITH_STDLIB -D__i386__ -DWIN32
 PFX=32
 !endif
 
-CFLAGS=$(CFLAGS) $(C_DEFINES) -I. -I$(CRT_INC_PATH) /Gz
+CFLAGS=$(CFLAGS) $(C_DEFINES) -DNO_NAMES -I. -I$(CRT_INC_PATH) /Gz
 
 SOURCES = curves/aff_pt.c curves/curves.c curves/ec_params.c curves/ec_shortw.c curves/prj_pt.c curves/prj_pt_monty.c \
           fp/fp.c fp/fp_add.c fp/fp_montgomery.c fp/fp_mul.c fp/fp_mul_redc1.c fp/fp_pow.c fp/fp_rand.c \

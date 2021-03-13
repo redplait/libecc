@@ -230,6 +230,7 @@ int ec_key_pair_import_from_priv_key_buf(ec_key_pair *kp,
 	return ret;
 }
 
+#ifndef NO_NAMES
 /* Import a structured private key to buffer.
  * The structure allows some sanity checks.
  */
@@ -514,6 +515,7 @@ int ec_structured_key_pair_import_from_buf(ec_key_pair *kp,
 
 	return 0;
 }
+#endif /* !NO_NAMES */
 
 /*
  * Generate a public/private key pair for given signature algorithm, using

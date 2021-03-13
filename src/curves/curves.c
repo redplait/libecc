@@ -15,6 +15,7 @@
  */
 #include "curves.h"
 
+#ifndef NO_NAMES
 /*
  * From a null-terminated string 'ec_name' of exact length 'ec_name_len'
  * (including final null character), the function returns a pointer
@@ -70,6 +71,7 @@ const ec_str_params *ec_get_curve_params_by_name(const u8 *ec_name,
  err:
 	return ret;
 }
+#endif /* NO_NAMES */
 
 /*
  * From a given curve type, the function returns a pointer to the
@@ -92,12 +94,13 @@ const ec_str_params *ec_get_curve_params_by_type(ec_curve_type ec_type)
 
 		if (ec_type == map->type) {
 			/* Do some sanity check before returning */
+#ifndef NO_NAMES
 			MUST_HAVE(params->name != NULL);
 			MUST_HAVE(params->name->buf != NULL);
 			name = params->name->buf;
 			name_len = (u8)local_strlen((const char *)name);
 			MUST_HAVE(params->name->buflen == (name_len + 1));
-
+#endif /* !NO_NAMES */
 			ret = params;
 			break;
 		}
@@ -106,6 +109,7 @@ const ec_str_params *ec_get_curve_params_by_type(ec_curve_type ec_type)
 	return ret;
 }
 
+#ifndef NO_NAMES
 /*
  * From a null-terminated string 'ec_name' of exact length 'ec_name_len'
  * (including final null character), the function returns the curve type
@@ -241,3 +245,4 @@ int ec_check_curve_type_and_name(const ec_curve_type ec_type,
  err:
 	return ret;
 }
+#endif /* !NO_NAMES */

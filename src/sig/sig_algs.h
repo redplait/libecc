@@ -73,6 +73,7 @@ int ec_verify(const u8 *sig, u8 siglen, const ec_pub_key *pub_key,
 	      const u8 *m, u32 mlen, ec_sig_alg_type sig_type,
 	      hash_alg_type hash_type);
 
+#ifndef NO_NAMES
 int ec_structured_sig_import_from_buf(u8 *sig, u32 siglen,
                                       const u8 *out_buf, u32 outlen,
                                       ec_sig_alg_type * sig_type,
@@ -85,5 +86,6 @@ int ec_structured_sig_export_to_buf(const u8 *sig, u32 siglen,
                                     hash_alg_type hash_type,
                                     const u8
                                     curve_name[MAX_CURVE_NAME_LEN]);
+#endif /* NO_NAMES */
 
 #endif /* __SIG_ALGS_H__ */

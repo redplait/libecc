@@ -18,10 +18,9 @@
 
 #include "ec_params.h"
 
+#ifndef NO_NAMES
 const ec_str_params *ec_get_curve_params_by_name(const u8 *ec_name,
 						 u8 ec_name_len);
-
-const ec_str_params *ec_get_curve_params_by_type(ec_curve_type ec_type);
 
 ec_curve_type ec_get_curve_type_by_name(const u8 *ec_name, u8 ec_name_len);
 
@@ -29,5 +28,9 @@ int ec_get_curve_name_by_type(const ec_curve_type ec_type, u8 *out, u8 outlen);
 
 int ec_check_curve_type_and_name(const ec_curve_type ec_type,
 				 const u8 *ec_name, u8 ec_name_len);
+
+#endif /* NO_NAMES */
+
+const ec_str_params *ec_get_curve_params_by_type(ec_curve_type ec_type);
 
 #endif /* __CURVES_H__ */

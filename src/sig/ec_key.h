@@ -79,6 +79,7 @@ void ec_priv_key_import_from_buf(ec_priv_key *priv_key,
 int ec_priv_key_export_to_buf(const ec_priv_key *priv_key, u8 *priv_key_buf,
 			      u8 priv_key_buf_len);
 
+#ifndef NO_NAMES
 int ec_structured_priv_key_import_from_buf(ec_priv_key *priv_key,
 					   const ec_params *params,
 					   const u8 *priv_key_buf,
@@ -87,6 +88,7 @@ int ec_structured_priv_key_import_from_buf(ec_priv_key *priv_key,
 int ec_structured_priv_key_export_to_buf(const ec_priv_key *priv_key,
 					 u8 *priv_key_buf,
 					 u8 priv_key_buf_len);
+#endif /* !NO_NAMES */
 
 /*
  * Declarations for EC public keys
@@ -138,6 +140,7 @@ int ec_pub_key_import_from_aff_buf(ec_pub_key *pub_key, const ec_params *params,
 int ec_pub_key_export_to_aff_buf(const ec_pub_key *pub_key, u8 *pub_key_buf,
                              u8 pub_key_buf_len);
 
+#ifndef NO_NAMES
 int ec_structured_pub_key_import_from_buf(ec_pub_key *pub_key,
 					  const ec_params *params,
 					  const u8 *pub_key_buf,
@@ -145,6 +148,7 @@ int ec_structured_pub_key_import_from_buf(ec_pub_key *pub_key,
 					  ec_sig_alg_type ec_key_alg);
 int ec_structured_pub_key_export_to_buf(const ec_pub_key *pub_key,
 					u8 *pub_key_buf, u8 pub_key_buf_len);
+#endif /* !NO_NAMES */
 
 /*
  * Declarations for EC key pairs

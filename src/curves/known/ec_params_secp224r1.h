@@ -211,8 +211,10 @@ TO_EC_STR_PARAM(secp224r1_cofactor);
 static const u8 secp224r1_oid[] = "1.3.132.0.33";
 TO_EC_STR_PARAM(secp224r1_oid);
 
+#ifndef NO_NAMES
 static const u8 secp224r1_name[] = "SECP224R1";
 TO_EC_STR_PARAM(secp224r1_name);
+#endif /* !NO_NAMES */
 
 static const ec_str_params secp224r1_str_params = {
 #ifdef WIN32
@@ -234,7 +236,9 @@ static const ec_str_params secp224r1_str_params = {
  &secp224r1_order_bitlen_str_param,
  &secp224r1_cofactor_str_param,
  &secp224r1_oid_str_param,
+#ifndef NO_NAMES
  &secp224r1_name_str_param,
+#endif /* !NO_NAMES */
 #else
 	.p = &secp224r1_p_str_param,
 	.p_bitlen = &secp224r1_p_bitlen_str_param,

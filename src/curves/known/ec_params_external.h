@@ -79,7 +79,9 @@ typedef struct {
 
 	/* OID and pretty name */
 	const ec_str_param *oid;
+#ifndef NO_NAMES
 	const ec_str_param *name;
+#endif /* !NO_NAMES */
 } ec_str_params;
 
 #endif /* __EC_PARAMS_EXTERNAL_H__ */

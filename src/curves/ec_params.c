@@ -134,12 +134,13 @@ void import_params(ec_params *out_params, const ec_str_params *in_str_params)
 		      (const char *)in_str_params->oid->buf,
 		      MAX_CURVE_OID_LEN - 1);
 
+#ifndef NO_NAMES
 	/* Import a local copy of curve name */
 	local_memset(out_params->curve_name, 0, MAX_CURVE_NAME_LEN);
 	local_strncpy((char *)out_params->curve_name,
 		      (const char *)in_str_params->name->buf,
 		      MAX_CURVE_NAME_LEN - 1);
-
+#endif /* !NO_NAMES */
 	/* Uninit temporary parameters */
 	nn_uninit(&tmp_p);
 	nn_uninit(&tmp_r);

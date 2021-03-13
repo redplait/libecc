@@ -205,12 +205,12 @@ static const u8 GOST_512bits_curve_cofactor[] = { 0x01 };
 TO_EC_STR_PARAM(GOST_512bits_curve_cofactor);
 
 static const u8 GOST_512bits_curve_oid[] = "unknown2";
-
 TO_EC_STR_PARAM(GOST_512bits_curve_oid);
 
+#ifndef NO_NAMES
 static const u8 GOST_512bits_curve_name[] = "GOST512";
-
 TO_EC_STR_PARAM(GOST_512bits_curve_name);
+#endif /* !NO_NAMES */
 
 static const ec_str_params GOST_512bits_curve_str_params = {
 #ifdef WIN32
@@ -232,7 +232,9 @@ static const ec_str_params GOST_512bits_curve_str_params = {
  &GOST_512bits_curve_order_bitlen_str_param,
  &GOST_512bits_curve_cofactor_str_param,
  &GOST_512bits_curve_oid_str_param,
+#ifndef NO_NAMES
  &GOST_512bits_curve_name_str_param,
+#endif /* !NO_NAMES */
 #else
 	.p = &GOST_512bits_curve_p_str_param,
 	.p_bitlen = &GOST_512bits_curve_p_bitlen_str_param,

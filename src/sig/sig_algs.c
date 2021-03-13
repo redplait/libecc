@@ -545,6 +545,7 @@ int ec_verify(const u8 *sig, u8 siglen, const ec_pub_key *pub_key,
 	return ret;
 }
 
+#ifndef NO_NAMES
 /*
  * Import a signature with structured data containing information about the EC
  * algorithm type as well as the hash function used to produce it
@@ -633,3 +634,4 @@ int ec_structured_sig_export_to_buf(const u8 *sig, u32 siglen,
 
         return 0;
 }
+#endif /* !NO_NAMES */

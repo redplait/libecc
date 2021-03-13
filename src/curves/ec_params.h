@@ -74,8 +74,10 @@ typedef struct {
 	/* Object Identifier for the curve */
 	u8 curve_oid[MAX_CURVE_OID_LEN];
 
+#ifndef NO_NAMES
 	/* Short name for the curve */
 	u8 curve_name[MAX_CURVE_NAME_LEN];
+#endif /* !NO_NAMES */
 } ec_params;
 
 void import_params(ec_params *out_params, const ec_str_params *in_str_params);
