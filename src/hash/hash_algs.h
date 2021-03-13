@@ -79,6 +79,7 @@ typedef void (*_hfunc_finalize) (hash_context * hctx, unsigned char *output);
 typedef void (*_hfunc_scattered) (const unsigned char **inputs,
 				  const u32 *ilens, unsigned char *output);
 
+#ifndef NO_NAMES
 #define HASH_MAPPING_SANITY_CHECK(A)			\
 	MUST_HAVE(((A) != NULL) && 			\
 		  ((A)->name != NULL) &&		\
@@ -86,6 +87,14 @@ typedef void (*_hfunc_scattered) (const unsigned char **inputs,
 		  ((A)->hfunc_update != NULL) &&	\
 		  ((A)->hfunc_finalize != NULL) &&	\
 		  ((A)->hfunc_scattered != NULL))
+#else
+#define HASH_MAPPING_SANITY_CHECK(A)			\
+	MUST_HAVE(((A) != NULL) && 			\
+		  ((A)->hfunc_init != NULL) &&		\
+		  ((A)->hfunc_update != NULL) &&	\
+		  ((A)->hfunc_finalize != NULL) &&	\
+		  ((A)->hfunc_scattered != NULL))
+#endif /* NO_NAMES */
 
 /*
  * All the hash algorithms we support are abstracted using the following
@@ -94,7 +103,9 @@ typedef void (*_hfunc_scattered) (const unsigned char **inputs,
  */
 typedef struct {
 	hash_alg_type type;
+#ifndef NO_NAMES
 	const char *const name;
+#endif /* NO_NAMES */
 	u8 digest_size;
 	u8 block_size;
 	_hfunc_init hfunc_init;
@@ -103,302 +114,102 @@ typedef struct {
 	_hfunc_scattered hfunc_scattered;
 } hash_mapping;
 
-#define MAX_HASH_ALG_NAME_LEN	0
-static const hash_mapping hash_maps[] = {
-#ifdef WITH_HASH_SHA224
- {
-#ifdef WIN32
- SHA224,
- "SHA224",
- SHA224_DIGEST_SIZE,
- SHA224_BLOCK_SIZE,
- (_hfunc_init) sha224_init,
- (_hfunc_update) sha224_update,
- (_hfunc_finalize) sha224_final,
- sha224_scattered
-#else
-	.type = SHA224,	/* SHA224 */
-	 .name = "SHA224",
-	 .digest_size = SHA224_DIGEST_SIZE,
-	 .block_size = SHA224_BLOCK_SIZE,
-	 .hfunc_init = (_hfunc_init) sha224_init,
-	 .hfunc_update = (_hfunc_update) sha224_update,
-	 .hfunc_finalize = (_hfunc_finalize) sha224_final,
-	 .hfunc_scattered = sha224_scattered
-#endif /* WIN32 */
-},
-#if (MAX_HASH_ALG_NAME_LEN < 7)
-#undef MAX_HASH_ALG_NAME_LEN
-#define MAX_HASH_ALG_NAME_LEN 7
-#endif /* MAX_HASH_ALG_NAME_LEN */
-#endif /* WITH_HASH_SHA224 */
-#ifdef WITH_HASH_SHA256
- {
-#ifdef WIN32
- SHA256,	/* SHA256 */
- "SHA256",
- SHA256_DIGEST_SIZE,
- SHA256_BLOCK_SIZE,
- (_hfunc_init) sha256_init,
- (_hfunc_update) sha256_update,
- (_hfunc_finalize) sha256_final,
- sha256_scattered
-#else
-	 .type = SHA256,	/* SHA256 */
-	 .name = "SHA256",
-	 .digest_size = SHA256_DIGEST_SIZE,
-	 .block_size = SHA256_BLOCK_SIZE,
-	 .hfunc_init = (_hfunc_init) sha256_init,
-	 .hfunc_update = (_hfunc_update) sha256_update,
-	 .hfunc_finalize = (_hfunc_finalize) sha256_final,
-	 .hfunc_scattered = sha256_scattered
-#endif /* WIN32 */
-},
-#if (MAX_HASH_ALG_NAME_LEN < 7)
-#undef MAX_HASH_ALG_NAME_LEN
-#define MAX_HASH_ALG_NAME_LEN 7
-#endif /* MAX_HASH_ALG_NAME_LEN */
-#endif /* WITH_HASH_SHA256 */
-#ifdef WITH_HASH_SHA384
- {
-#ifdef WIN32
- SHA384,	/* SHA384 */
- "SHA384",
- SHA384_DIGEST_SIZE,
- SHA384_BLOCK_SIZE,
- (_hfunc_init) sha384_init,
- (_hfunc_update) sha384_update,
- (_hfunc_finalize) sha384_final,
- sha384_scattered
-#else
-	 .type = SHA384,	/* SHA384 */
-	 .name = "SHA384",
-	 .digest_size = SHA384_DIGEST_SIZE,
-	 .block_size = SHA384_BLOCK_SIZE,
-	 .hfunc_init = (_hfunc_init) sha384_init,
-	 .hfunc_update = (_hfunc_update) sha384_update,
-	 .hfunc_finalize = (_hfunc_finalize) sha384_final,
-	 .hfunc_scattered = sha384_scattered
-#endif /* WIN32 */
-},
-#if (MAX_HASH_ALG_NAME_LEN < 7)
-#undef MAX_HASH_ALG_NAME_LEN
-#define MAX_HASH_ALG_NAME_LEN 7
-#endif /* MAX_HASH_ALG_NAME_LEN */
-#endif /* WITH_HASH_SHA384 */
-#ifdef WITH_HASH_SHA512
- {
-#ifdef WIN32
- SHA512,	/* SHA512 */
- "SHA512",
- SHA512_DIGEST_SIZE,
- SHA512_BLOCK_SIZE,
- (_hfunc_init) sha512_init,
- (_hfunc_update) sha512_update,
- (_hfunc_finalize) sha512_final,
- sha512_scattered
-#else
-	 .type = SHA512,	/* SHA512 */
-	 .name = "SHA512",
-	 .digest_size = SHA512_DIGEST_SIZE,
-	 .block_size = SHA512_BLOCK_SIZE,
-	 .hfunc_init = (_hfunc_init) sha512_init,
-	 .hfunc_update = (_hfunc_update) sha512_update,
-	 .hfunc_finalize = (_hfunc_finalize) sha512_final,
-	 .hfunc_scattered = sha512_scattered
-#endif /* WIN32 */
-},
-#if (MAX_HASH_ALG_NAME_LEN < 7)
-#undef MAX_HASH_ALG_NAME_LEN
-#define MAX_HASH_ALG_NAME_LEN 7
-#endif /* MAX_HASH_ALG_NAME_LEN */
-#endif /* WITH_HASH_SHA512 */
-#ifdef WITH_HASH_SHA512_224
- {
-#ifdef WIN32
- SHA512_224,	/* SHA512_224 */
- "SHA512_224",
- SHA512_224_DIGEST_SIZE,
- SHA512_224_BLOCK_SIZE,
- (_hfunc_init) sha512_224_init,
- (_hfunc_update) sha512_224_update,
- (_hfunc_finalize) sha512_224_final,
- sha512_224_scattered
-#else
-	 .type = SHA512_224,	/* SHA512_224 */
-	 .name = "SHA512_224",
-	 .digest_size = SHA512_224_DIGEST_SIZE,
-	 .block_size = SHA512_224_BLOCK_SIZE,
-	 .hfunc_init = (_hfunc_init) sha512_224_init,
-	 .hfunc_update = (_hfunc_update) sha512_224_update,
-	 .hfunc_finalize = (_hfunc_finalize) sha512_224_final,
-	 .hfunc_scattered = sha512_224_scattered
-#endif /* WIN32 */
-},
-#if (MAX_HASH_ALG_NAME_LEN < 7)
-#undef MAX_HASH_ALG_NAME_LEN
-#define MAX_HASH_ALG_NAME_LEN 7
-#endif /* MAX_HASH_ALG_NAME_LEN */
-#endif /* WITH_HASH_SHA512_224 */
-#ifdef WITH_HASH_SHA512_256
- {
-#ifdef WIN32
- SHA512_256,	/* SHA512_256 */
- "SHA512_256",
- SHA512_256_DIGEST_SIZE,
- SHA512_256_BLOCK_SIZE,
- (_hfunc_init) sha512_256_init,
- (_hfunc_update) sha512_256_update,
- (_hfunc_finalize) sha512_256_final,
- sha512_256_scattered
-#else
- 	 .type = SHA512_256,	/* SHA512_256 */
-	 .name = "SHA512_256",
-	 .digest_size = SHA512_256_DIGEST_SIZE,
-	 .block_size = SHA512_256_BLOCK_SIZE,
-	 .hfunc_init = (_hfunc_init) sha512_256_init,
-	 .hfunc_update = (_hfunc_update) sha512_256_update,
-	 .hfunc_finalize = (_hfunc_finalize) sha512_256_final,
-	 .hfunc_scattered = sha512_256_scattered
-#endif /* WIN32 */
-},
-#if (MAX_HASH_ALG_NAME_LEN < 7)
-#undef MAX_HASH_ALG_NAME_LEN
-#define MAX_HASH_ALG_NAME_LEN 7
-#endif /* MAX_HASH_ALG_NAME_LEN */
-#endif /* WITH_HASH_SHA512_256 */
-#ifdef WITH_HASH_SHA3_224
- {
-#ifdef WIN32
- SHA3_224,	/* SHA3_224 */
- "SHA3_224",
- SHA3_224_DIGEST_SIZE,
- SHA3_224_BLOCK_SIZE,
- (_hfunc_init) sha3_224_init,
- (_hfunc_update) sha3_224_update,
- (_hfunc_finalize) sha3_224_final,
- sha3_224_scattered
-#else
-	.type = SHA3_224,	/* SHA3_224 */
-	 .name = "SHA3_224",
-	 .digest_size = SHA3_224_DIGEST_SIZE,
-	 .block_size = SHA3_224_BLOCK_SIZE,
-	 .hfunc_init = (_hfunc_init) sha3_224_init,
-	 .hfunc_update = (_hfunc_update) sha3_224_update,
-	 .hfunc_finalize = (_hfunc_finalize) sha3_224_final,
-	 .hfunc_scattered = sha3_224_scattered
-#endif /* WIN32 */
-},
-#if (MAX_HASH_ALG_NAME_LEN < 9)
-#undef MAX_HASH_ALG_NAME_LEN
-#define MAX_HASH_ALG_NAME_LEN 9
-#endif /* MAX_HASH_ALG_NAME_LEN */
-#endif /* WITH_HASH_SHA3_224 */
-#ifdef WITH_HASH_SHA3_256
- {
-#ifdef WIN32
- SHA3_256,	/* SHA3_256 */
- "SHA3_256",
- SHA3_256_DIGEST_SIZE,
- SHA3_256_BLOCK_SIZE,
- (_hfunc_init) sha3_256_init,
- (_hfunc_update) sha3_256_update,
- (_hfunc_finalize) sha3_256_final,
- sha3_256_scattered
-#else
-	 .type = SHA3_256,	/* SHA3_256 */
-	 .name = "SHA3_256",
-	 .digest_size = SHA3_256_DIGEST_SIZE,
-	 .block_size = SHA3_256_BLOCK_SIZE,
-	 .hfunc_init = (_hfunc_init) sha3_256_init,
-	 .hfunc_update = (_hfunc_update) sha3_256_update,
-	 .hfunc_finalize = (_hfunc_finalize) sha3_256_final,
-	 .hfunc_scattered = sha3_256_scattered
-#endif /* WIN32 */
-},
-#if (MAX_HASH_ALG_NAME_LEN < 9)
-#undef MAX_HASH_ALG_NAME_LEN
-#define MAX_HASH_ALG_NAME_LEN 9
-#endif /* MAX_HASH_ALG_NAME_LEN */
-#endif /* WITH_HASH_SHA3_256 */
-#ifdef WITH_HASH_SHA3_384
-{
-#ifdef WIN32
- SHA3_384,	/* SHA3_384 */
- "SHA3_384",
- SHA3_384_DIGEST_SIZE,
- SHA3_384_BLOCK_SIZE,
- (_hfunc_init) sha3_384_init,
- (_hfunc_update) sha3_384_update,
- (_hfunc_finalize) sha3_384_final,
- sha3_384_scattered
-#else
-         .type = SHA3_384,	/* SHA3_384 */
-	 .name = "SHA3_384",
-	 .digest_size = SHA3_384_DIGEST_SIZE,
-	 .block_size = SHA3_384_BLOCK_SIZE,
-	 .hfunc_init = (_hfunc_init) sha3_384_init,
-	 .hfunc_update = (_hfunc_update) sha3_384_update,
-	 .hfunc_finalize = (_hfunc_finalize) sha3_384_final,
-	 .hfunc_scattered = sha3_384_scattered
-#endif /* WIN32 */
-},
-#if (MAX_HASH_ALG_NAME_LEN < 9)
-#undef MAX_HASH_ALG_NAME_LEN
-#define MAX_HASH_ALG_NAME_LEN 9
-#endif /* MAX_HASH_ALG_NAME_LEN */
-#endif /* WITH_HASH_SHA3_384 */
-#ifdef WITH_HASH_SHA3_512
-{
-#ifdef WIN32
- SHA3_512,	/* SHA3_512 */
- "SHA3_512",
- SHA3_512_DIGEST_SIZE,
- SHA3_512_BLOCK_SIZE,
- (_hfunc_init) sha3_512_init,
- (_hfunc_update) sha3_512_update,
- (_hfunc_finalize) sha3_512_final,
- sha3_512_scattered
-#else
-	 .type = SHA3_512,	/* SHA3_512 */
-	 .name = "SHA3_512",
-	 .digest_size = SHA3_512_DIGEST_SIZE,
-	 .block_size = SHA3_512_BLOCK_SIZE,
-	 .hfunc_init = (_hfunc_init) sha3_512_init,
-	 .hfunc_update = (_hfunc_update) sha3_512_update,
-	 .hfunc_finalize = (_hfunc_finalize) sha3_512_final,
-	 .hfunc_scattered = sha3_512_scattered
-#endif /* WIN32 */
-},
-#if (MAX_HASH_ALG_NAME_LEN < 9)
-#undef MAX_HASH_ALG_NAME_LEN
-#define MAX_HASH_ALG_NAME_LEN 9
-#endif /* MAX_HASH_ALG_NAME_LEN */
-#endif /* WITH_HASH_SHA3_512 */
-{
-#ifdef WIN32
- UNKNOWN_HASH_ALG,	/* Needs to be kept last */
- "UNKNOWN",
- 0,
- 0,
- NULL,
- NULL,
- NULL,
- NULL,
-#else
-	 .type = UNKNOWN_HASH_ALG,	/* Needs to be kept last */
-	 .name = "UNKNOWN",
-	 .digest_size = 0,
-	 .block_size = 0,
-	 .hfunc_init = NULL,
-	 .hfunc_update = NULL,
-	 .hfunc_finalize = NULL,
-	 .hfunc_scattered = NULL
-#endif /* WIN32 */
-},
-};
+extern const hash_mapping hash_maps[];
 
+#define MAX_HASH_ALG_NAME_LEN	0
+#ifdef WITH_HASH_SHA224
+
+#if (MAX_HASH_ALG_NAME_LEN < 7)
+#undef MAX_HASH_ALG_NAME_LEN
+#define MAX_HASH_ALG_NAME_LEN 7
+#endif /* MAX_HASH_ALG_NAME_LEN */
+
+#endif /* WITH_HASH_SHA224 */
+
+#ifdef WITH_HASH_SHA256
+
+#if (MAX_HASH_ALG_NAME_LEN < 7)
+#undef MAX_HASH_ALG_NAME_LEN
+#define MAX_HASH_ALG_NAME_LEN 7
+#endif /* MAX_HASH_ALG_NAME_LEN */
+
+#endif /* WITH_HASH_SHA256 */
+
+#ifdef WITH_HASH_SHA384
+
+#if (MAX_HASH_ALG_NAME_LEN < 7)
+#undef MAX_HASH_ALG_NAME_LEN
+#define MAX_HASH_ALG_NAME_LEN 7
+#endif /* MAX_HASH_ALG_NAME_LEN */
+
+#endif /* WITH_HASH_SHA384 */
+
+#ifdef WITH_HASH_SHA512
+
+#if (MAX_HASH_ALG_NAME_LEN < 7)
+#undef MAX_HASH_ALG_NAME_LEN
+#define MAX_HASH_ALG_NAME_LEN 7
+#endif /* MAX_HASH_ALG_NAME_LEN */
+
+#endif /* WITH_HASH_SHA512 */
+
+#ifdef WITH_HASH_SHA512_224
+
+#if (MAX_HASH_ALG_NAME_LEN < 7)
+#undef MAX_HASH_ALG_NAME_LEN
+#define MAX_HASH_ALG_NAME_LEN 7
+#endif /* MAX_HASH_ALG_NAME_LEN */
+
+#endif /* WITH_HASH_SHA512_224 */
+
+#ifdef WITH_HASH_SHA512_256
+
+#if (MAX_HASH_ALG_NAME_LEN < 7)
+#undef MAX_HASH_ALG_NAME_LEN
+#define MAX_HASH_ALG_NAME_LEN 7
+#endif /* MAX_HASH_ALG_NAME_LEN */
+
+#endif /* WITH_HASH_SHA512_256 */
+
+#ifdef WITH_HASH_SHA3_224
+
+#if (MAX_HASH_ALG_NAME_LEN < 9)
+#undef MAX_HASH_ALG_NAME_LEN
+#define MAX_HASH_ALG_NAME_LEN 9
+#endif /* MAX_HASH_ALG_NAME_LEN */
+
+#endif /* WITH_HASH_SHA3_224 */
+
+#ifdef WITH_HASH_SHA3_256
+
+#if (MAX_HASH_ALG_NAME_LEN < 9)
+#undef MAX_HASH_ALG_NAME_LEN
+#define MAX_HASH_ALG_NAME_LEN 9
+#endif /* MAX_HASH_ALG_NAME_LEN */
+
+#endif /* WITH_HASH_SHA3_256 */
+
+#ifdef WITH_HASH_SHA3_384
+
+#if (MAX_HASH_ALG_NAME_LEN < 9)
+#undef MAX_HASH_ALG_NAME_LEN
+#define MAX_HASH_ALG_NAME_LEN 9
+#endif /* MAX_HASH_ALG_NAME_LEN */
+
+#endif /* WITH_HASH_SHA3_384 */
+
+#ifdef WITH_HASH_SHA3_512
+
+#if (MAX_HASH_ALG_NAME_LEN < 9)
+#undef MAX_HASH_ALG_NAME_LEN
+#define MAX_HASH_ALG_NAME_LEN 9
+#endif /* MAX_HASH_ALG_NAME_LEN */
+
+#endif /* WITH_HASH_SHA3_512 */
+
+#ifndef NO_NAMES
 const hash_mapping *get_hash_by_name(const char *hash_name);
+#endif /* !NO_NAMES */
 const hash_mapping *get_hash_by_type(hash_alg_type hash_type);
 int get_hash_sizes(hash_alg_type hash_type, u8 *digest_size, u8 *block_size);
 int hash_mapping_callbacks_sanity_check(const hash_mapping *h);
