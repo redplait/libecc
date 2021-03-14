@@ -26,7 +26,9 @@
  */
 int init_pubkey_from_privkey(ec_pub_key *pub_key, ec_priv_key *priv_key);
 
+#ifndef NO_NAMES
 const ec_sig_mapping *get_sig_by_name(const char *ec_sig_name);
+#endif /* !NO_NAMES */
 const ec_sig_mapping *get_sig_by_type(ec_sig_alg_type sig_type);
 
 /* Sanity checks for calbacks */

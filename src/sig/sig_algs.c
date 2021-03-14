@@ -15,6 +15,246 @@
  */
 #include "sig_algs.h"
 
+const ec_sig_mapping ec_sig_maps[] = {
+#ifdef WITH_SIG_ECDSA
+	{
+#ifdef WIN32
+ ECDSA,
+#ifndef NO_NAMES
+ "ECDSA",
+#endif /* !NO_NAMES */
+ ecdsa_siglen,
+ ecdsa_init_pub_key,
+ _ecdsa_sign_init,
+ _ecdsa_sign_update,
+ _ecdsa_sign_finalize,
+ _ecdsa_verify_init,
+ _ecdsa_verify_update,
+ _ecdsa_verify_finalize,
+#else
+         .type = ECDSA,
+	 .name = "ECDSA",
+	 .siglen = ecdsa_siglen,
+	 .init_pub_key = ecdsa_init_pub_key,
+	 .sign_init = _ecdsa_sign_init,
+	 .sign_update = _ecdsa_sign_update,
+	 .sign_finalize = _ecdsa_sign_finalize,
+	 .verify_init = _ecdsa_verify_init,
+	 .verify_update = _ecdsa_verify_update,
+	 .verify_finalize = _ecdsa_verify_finalize,
+#endif /* WIN32 */
+	 },
+#endif /* WITH_SIG_ECDSA */
+
+#ifdef WITH_SIG_ECKCDSA
+	{
+#ifdef WIN32
+ ECKCDSA,
+#ifndef NO_NAMES
+"ECKCDSA",
+#endif /* !NO_NAMES */
+ eckcdsa_siglen,
+ eckcdsa_init_pub_key,
+ _eckcdsa_sign_init,
+ _eckcdsa_sign_update,
+ _eckcdsa_sign_finalize,
+ _eckcdsa_verify_init,
+ _eckcdsa_verify_update,
+ _eckcdsa_verify_finalize,
+#else
+	 .type = ECKCDSA,
+	 .name = "ECKCDSA",
+	 .siglen = eckcdsa_siglen,
+	 .init_pub_key = eckcdsa_init_pub_key,
+	 .sign_init = _eckcdsa_sign_init,
+	 .sign_update = _eckcdsa_sign_update,
+	 .sign_finalize = _eckcdsa_sign_finalize,
+	 .verify_init = _eckcdsa_verify_init,
+	 .verify_update = _eckcdsa_verify_update,
+	 .verify_finalize = _eckcdsa_verify_finalize,
+#endif /* WIN32 */
+	 },
+#endif /* WITH_SIG_ECKCDSA */
+
+#ifdef WITH_SIG_ECSDSA
+	{
+#ifdef WIN32
+ ECSDSA,
+#ifndef NO_NAMES
+ "ECSDSA",
+#endif /* !NO_NAMES */
+ ecsdsa_siglen,
+ ecsdsa_init_pub_key,
+ _ecsdsa_sign_init,
+ _ecsdsa_sign_update,
+ _ecsdsa_sign_finalize,
+ _ecsdsa_verify_init,
+ _ecsdsa_verify_update,
+ _ecsdsa_verify_finalize,
+#else
+	 .type = ECSDSA,
+	 .name = "ECSDSA",
+	 .siglen = ecsdsa_siglen,
+	 .init_pub_key = ecsdsa_init_pub_key,
+	 .sign_init = _ecsdsa_sign_init,
+	 .sign_update = _ecsdsa_sign_update,
+	 .sign_finalize = _ecsdsa_sign_finalize,
+	 .verify_init = _ecsdsa_verify_init,
+	 .verify_update = _ecsdsa_verify_update,
+	 .verify_finalize = _ecsdsa_verify_finalize,
+#endif /* WIN32 */
+	 },
+#endif /* WITH_SIG_ECSDSA */
+
+#ifdef WITH_SIG_ECOSDSA
+	{
+#ifdef WIN32
+ ECOSDSA,
+#ifndef NO_NAMES
+ "ECOSDSA",
+#endif /* !NO_NAMES */
+ ecosdsa_siglen,
+ ecosdsa_init_pub_key,
+ _ecosdsa_sign_init,
+ _ecosdsa_sign_update,
+ _ecosdsa_sign_finalize,
+ _ecosdsa_verify_init,
+ _ecosdsa_verify_update,
+ _ecosdsa_verify_finalize,
+#else
+	 .type = ECOSDSA,
+	 .name = "ECOSDSA",
+	 .siglen = ecosdsa_siglen,
+	 .init_pub_key = ecosdsa_init_pub_key,
+	 .sign_init = _ecosdsa_sign_init,
+	 .sign_update = _ecosdsa_sign_update,
+	 .sign_finalize = _ecosdsa_sign_finalize,
+	 .verify_init = _ecosdsa_verify_init,
+	 .verify_update = _ecosdsa_verify_update,
+	 .verify_finalize = _ecosdsa_verify_finalize,
+#endif /* WIN32 */
+	 },
+#endif /* WITH_SIG_ECOSDSA */
+
+#ifdef WITH_SIG_ECFSDSA
+	{
+#ifdef WIN32
+ ECFSDSA,
+#ifndef NO_NAMES
+ "ECFSDSA",
+#endif /* !NO_NAMES */
+ ecfsdsa_siglen,
+ ecfsdsa_init_pub_key,
+ _ecfsdsa_sign_init,
+ _ecfsdsa_sign_update,
+ _ecfsdsa_sign_finalize,
+ _ecfsdsa_verify_init,
+ _ecfsdsa_verify_update,
+ _ecfsdsa_verify_finalize,
+#else
+	 .type = ECFSDSA,
+	 .name = "ECFSDSA",
+	 .siglen = ecfsdsa_siglen,
+	 .init_pub_key = ecfsdsa_init_pub_key,
+	 .sign_init = _ecfsdsa_sign_init,
+	 .sign_update = _ecfsdsa_sign_update,
+	 .sign_finalize = _ecfsdsa_sign_finalize,
+	 .verify_init = _ecfsdsa_verify_init,
+	 .verify_update = _ecfsdsa_verify_update,
+	 .verify_finalize = _ecfsdsa_verify_finalize,
+#endif /* WIN32 */
+	 },
+#endif /* WITH_SIG_ECFSDSA */
+
+#ifdef WITH_SIG_ECGDSA
+	{
+#ifdef WIN32
+ ECGDSA,
+#ifndef NO_NAMES
+ "ECGDSA",
+#endif /* !NO_NAMES */
+ ecgdsa_siglen,
+ ecgdsa_init_pub_key,
+ _ecgdsa_sign_init,
+ _ecgdsa_sign_update,
+ _ecgdsa_sign_finalize,
+ _ecgdsa_verify_init,
+ _ecgdsa_verify_update,
+ _ecgdsa_verify_finalize,
+#else
+	 .type = ECGDSA,
+	 .name = "ECGDSA",
+	 .siglen = ecgdsa_siglen,
+	 .init_pub_key = ecgdsa_init_pub_key,
+	 .sign_init = _ecgdsa_sign_init,
+	 .sign_update = _ecgdsa_sign_update,
+	 .sign_finalize = _ecgdsa_sign_finalize,
+	 .verify_init = _ecgdsa_verify_init,
+	 .verify_update = _ecgdsa_verify_update,
+	 .verify_finalize = _ecgdsa_verify_finalize,
+#endif /* WIN32 */
+	 },
+#endif /* WITH_SIG_ECGDSA */
+
+#ifdef WITH_SIG_ECRDSA
+	{
+#ifdef WIN32
+ ECRDSA,
+#ifndef NO_NAMES
+ "ECRDSA",
+#endif /* !NO_NAMES */
+ ecrdsa_siglen,
+ ecrdsa_init_pub_key,
+ _ecrdsa_sign_init,
+ _ecrdsa_sign_update,
+ _ecrdsa_sign_finalize,
+ _ecrdsa_verify_init,
+ _ecrdsa_verify_update,
+ _ecrdsa_verify_finalize,
+#else
+	 .type = ECRDSA,
+	 .name = "ECRDSA",
+	 .siglen = ecrdsa_siglen,
+	 .init_pub_key = ecrdsa_init_pub_key,
+	 .sign_init = _ecrdsa_sign_init,
+	 .sign_update = _ecrdsa_sign_update,
+	 .sign_finalize = _ecrdsa_sign_finalize,
+	 .verify_init = _ecrdsa_verify_init,
+	 .verify_update = _ecrdsa_verify_update,
+	 .verify_finalize = _ecrdsa_verify_finalize,
+#endif /* WIN32 */
+	 },
+#endif /* WITH_SIG_ECRDSA */
+
+	{
+#ifdef WIN32
+ UNKNOWN_SIG_ALG,	/* Needs to be kept last */
+#ifndef NO_NAMES
+ "UNKNOWN",
+#endif /* !NO_NAMES */
+ 0,
+ NULL,
+ NULL,
+ NULL,
+ NULL,
+ NULL,
+ NULL,
+ NULL,
+#else
+	 .type = UNKNOWN_SIG_ALG,	/* Needs to be kept last */
+	 .name = "UNKNOWN",
+	 .siglen = 0,
+	 .init_pub_key = NULL,
+	 .sign_init = NULL,
+	 .sign_update = NULL,
+	 .sign_finalize = NULL,
+	 .verify_init = NULL,
+	 .verify_update = NULL,
+	 .verify_finalize = NULL,
+#endif /* WIN32 */
+	 },
+
+};
 /*
  * Generic function to init a uninitialized public key from an initialized
  * private key. The function uses the expected logic to derive the key
@@ -44,6 +284,7 @@ int init_pubkey_from_privkey(ec_pub_key *pub_key, ec_priv_key *priv_key)
 	return ret;
 }
 
+#ifndef NO_NAMES
 const ec_sig_mapping *get_sig_by_name(const char *ec_sig_name)
 {
 	const ec_sig_mapping *sm, *ret = NULL;
@@ -61,6 +302,7 @@ const ec_sig_mapping *get_sig_by_name(const char *ec_sig_name)
 
 	return ret;
 }
+#endif /* !NO_NAMES */
 
 const ec_sig_mapping *get_sig_by_type(ec_sig_alg_type sig_type)
 {
@@ -95,10 +337,12 @@ int ec_sig_mapping_callbacks_sanity_check(const ec_sig_mapping *sig)
 	for (i = 0, sm = &ec_sig_maps[i];
 	     sm->type != UNKNOWN_SIG_ALG; sm = &ec_sig_maps[++i]) {
 		if(sm->type == sig->type){
+#ifndef NO_NAMES
 			if(!are_str_equal_nlen(sm->name, sig->name, MAX_SIG_ALG_NAME_LEN)){
 				goto err;
-			}
-			else if(sm->siglen != sig->siglen){
+			} else
+#endif /* !NO_NAMES */
+			if(sm->siglen != sig->siglen){
 				goto err;
 			}
 			else if(sm->init_pub_key != sig->init_pub_key){
