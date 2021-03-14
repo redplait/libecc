@@ -215,8 +215,10 @@ static const u8 brainpoolp224r1_cofactor[] = { 0x01 };
 
 TO_EC_STR_PARAM(brainpoolp224r1_cofactor);
 
+#ifndef NO_OIDS
 static const u8 brainpoolp224r1_oid[] = "1.3.36.3.3.2.8.1.1.5";
 TO_EC_STR_PARAM(brainpoolp224r1_oid);
+#endif /* !NO_OIDS */
 
 #ifndef NO_NAMES
 static const u8 brainpoolp224r1_name[] = "BRAINPOOLP224R1";
@@ -242,7 +244,9 @@ static const ec_str_params brainpoolp224r1_str_params = {
  &brainpoolp224r1_order_str_param,
  &brainpoolp224r1_order_bitlen_str_param,
  &brainpoolp224r1_cofactor_str_param,
+#ifndef NO_OIDS
  &brainpoolp224r1_oid_str_param,
+#endif /* !NO_OIDS */
 #ifndef NO_NAMES
  &brainpoolp224r1_name_str_param,
 #endif /* !NO_NAMES */

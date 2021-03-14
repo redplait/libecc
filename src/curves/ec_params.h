@@ -71,8 +71,10 @@ typedef struct {
 	/* Curve cofactor */
 	nn ec_gen_cofactor;
 
+#ifndef NO_OIDS
 	/* Object Identifier for the curve */
 	u8 curve_oid[MAX_CURVE_OID_LEN];
+#endif /* NO_OIDS */
 
 #ifndef NO_NAMES
 	/* Short name for the curve */

@@ -128,12 +128,13 @@ void import_params(ec_params *out_params, const ec_str_params *in_str_params)
 				&(out_params->ec_curve),
 				&tmp_gx, &tmp_gy, &tmp_gz);
 
+#ifndef NO_OIDS
 	/* Import a local copy of curve OID */
 	local_memset(out_params->curve_oid, 0, MAX_CURVE_OID_LEN);
 	local_strncpy((char *)out_params->curve_oid,
 		      (const char *)in_str_params->oid->buf,
 		      MAX_CURVE_OID_LEN - 1);
-
+#endif /* NO_OIDS */
 #ifndef NO_NAMES
 	/* Import a local copy of curve name */
 	local_memset(out_params->curve_name, 0, MAX_CURVE_NAME_LEN);

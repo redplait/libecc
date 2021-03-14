@@ -147,8 +147,10 @@ static const u8 secp256r1_cofactor[] = { 0x01 };
 
 TO_EC_STR_PARAM(secp256r1_cofactor);
 
+#ifndef NO_OIDS
 static const u8 secp256r1_oid[] = "1.2.840.10045.3.1.7";
 TO_EC_STR_PARAM(secp256r1_oid);
+#endif /* !NO_OIDS */
 
 #ifndef NO_NAMES
 static const u8 secp256r1_name[] = "SECP256R1";
@@ -174,7 +176,9 @@ static const ec_str_params secp256r1_str_params = {
  &secp256r1_order_str_param,
  &secp256r1_order_bitlen_str_param,
  &secp256r1_cofactor_str_param,
+#ifndef NO_OIDS
  &secp256r1_oid_str_param,
+#endif /* !NO_OIDS */
 #ifndef NO_NAMES
  &secp256r1_name_str_param,
 #endif /* !NO_NAMES */

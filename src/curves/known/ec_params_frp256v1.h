@@ -153,8 +153,10 @@ static const u8 frp256v1_cofactor[] = { 0x01 };
 
 TO_EC_STR_PARAM(frp256v1_cofactor);
 
+#ifndef NO_OIDS
 static const u8 frp256v1_oid[] = "1.2.250.1.223.101.256.1";
 TO_EC_STR_PARAM(frp256v1_oid);
+#endif /* !NO_OIDS */
 
 #ifndef NO_NAMES
 static const u8 frp256v1_name[] = "FRP256V1";
@@ -180,10 +182,12 @@ static const ec_str_params frp256v1_str_params = {
  &frp256v1_order_str_param,
  &frp256v1_order_bitlen_str_param,
  &frp256v1_cofactor_str_param,
+#ifndef NO_OIDS
  &frp256v1_oid_str_param,
+#endif /* !NO_OIDS */
 #ifndef NO_NAMES
  &frp256v1_name_str_param,
-#endif /* NO_NAMES */
+#endif /* !NO_NAMES */
 #else
 	.p = &frp256v1_p_str_param,
 	.p_bitlen = &frp256v1_p_bitlen_str_param,

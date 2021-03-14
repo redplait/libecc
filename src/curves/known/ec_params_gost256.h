@@ -153,8 +153,10 @@ static const u8 GOST_256bits_curve_cofactor[] = { 0x01 };
 
 TO_EC_STR_PARAM(GOST_256bits_curve_cofactor);
 
+#ifndef NO_OIDS
 static const u8 GOST_256bits_curve_oid[] = "unknown";
 TO_EC_STR_PARAM(GOST_256bits_curve_oid);
+#endif /* !NO_OIDS */
 
 #ifndef NO_NAMES
 static const u8 GOST_256bits_curve_name[] = "GOST256";
@@ -180,7 +182,9 @@ static const ec_str_params GOST_256bits_curve_str_params = {
  &GOST_256bits_curve_order_str_param,
  &GOST_256bits_curve_order_bitlen_str_param,
  &GOST_256bits_curve_cofactor_str_param,
+#ifndef NO_OIDS
  &GOST_256bits_curve_oid_str_param,
+#endif /* !NO_OIDS */
 #ifndef NO_NAMES
  &GOST_256bits_curve_name_str_param,
 #endif /* !NO_NAMES */

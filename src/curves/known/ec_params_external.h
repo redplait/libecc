@@ -77,8 +77,10 @@ typedef struct {
 	const ec_str_param *order_bitlen;
 	const ec_str_param *cofactor;
 
+#ifndef NO_OIDS
 	/* OID and pretty name */
 	const ec_str_param *oid;
+#endif /* !NO_OIDS */
 #ifndef NO_NAMES
 	const ec_str_param *name;
 #endif /* !NO_NAMES */

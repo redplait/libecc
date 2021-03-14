@@ -204,8 +204,10 @@ static const u8 GOST_512bits_curve_cofactor[] = { 0x01 };
 
 TO_EC_STR_PARAM(GOST_512bits_curve_cofactor);
 
+#ifndef NO_OIDS
 static const u8 GOST_512bits_curve_oid[] = "unknown2";
 TO_EC_STR_PARAM(GOST_512bits_curve_oid);
+#endif /* !NO_OIDS */
 
 #ifndef NO_NAMES
 static const u8 GOST_512bits_curve_name[] = "GOST512";
@@ -231,7 +233,9 @@ static const ec_str_params GOST_512bits_curve_str_params = {
  &GOST_512bits_curve_order_str_param,
  &GOST_512bits_curve_order_bitlen_str_param,
  &GOST_512bits_curve_cofactor_str_param,
+#ifndef NO_OIDS
  &GOST_512bits_curve_oid_str_param,
+#endif /* !NO_OIDS */
 #ifndef NO_NAMES
  &GOST_512bits_curve_name_str_param,
 #endif /* !NO_NAMES */
