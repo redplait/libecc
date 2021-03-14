@@ -16,9 +16,12 @@
 #include "../../lib_ecc_config.h"
 #ifdef WITH_CURVE_BRAINPOOLP256R1
 
-#ifndef __EC_PARAMS_BRAINPOOLP256R1_H__
-#define __EC_PARAMS_BRAINPOOLP256R1_H__
 #include "ec_params_external.h"
+
+#define CURVE_BRAINPOOLP256R1_P_BITLEN 256
+#define CURVE_BRAINPOOLP256R1_Q_BITLEN 256
+
+#ifndef SKIP_DATA
 
 static const u8 brainpoolp256r1_p[] = {
 	0xA9, 0xFB, 0x57, 0xDB, 0xA1, 0xEE, 0xA9, 0xBC,
@@ -29,7 +32,6 @@ static const u8 brainpoolp256r1_p[] = {
 
 TO_EC_STR_PARAM(brainpoolp256r1_p);
 
-#define CURVE_BRAINPOOLP256R1_P_BITLEN 256
 static const u8 brainpoolp256r1_p_bitlen[] = { 0x01, 0x00 };
 
 TO_EC_STR_PARAM(brainpoolp256r1_p_bitlen);
@@ -138,7 +140,6 @@ static const u8 brainpoolp256r1_order[] = {
 
 TO_EC_STR_PARAM(brainpoolp256r1_order);
 
-#define CURVE_BRAINPOOLP256R1_Q_BITLEN 256
 static const u8 brainpoolp256r1_order_bitlen[] = { 0x01, 0x00 };
 
 TO_EC_STR_PARAM(brainpoolp256r1_order_bitlen);
@@ -205,6 +206,8 @@ static const ec_str_params brainpoolp256r1_str_params = {
 #endif /* WIN32 */
 };
 
+#endif /* !SKIP_DATA */
+
 /*
  * Compute max bit length of all curves for p and q
  */
@@ -222,7 +225,5 @@ static const ec_str_params brainpoolp256r1_str_params = {
 #undef CURVES_MAX_Q_BIT_LEN
 #define CURVES_MAX_Q_BIT_LEN CURVE_BRAINPOOLP256R1_Q_BITLEN
 #endif
-
-#endif /* __EC_PARAMS_BRAINPOOLP256R1_H__ */
 
 #endif /* WITH_CURVE_BRAINPOOLP256R1 */

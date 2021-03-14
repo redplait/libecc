@@ -16,9 +16,12 @@
 #include "../../lib_ecc_config.h"
 #ifdef WITH_CURVE_SECP192R1
 
-#ifndef __EC_PARAMS_SECP192R1_H__
-#define __EC_PARAMS_SECP192R1_H__
 #include "ec_params_external.h"
+
+#define CURVE_SECP192R1_P_BITLEN 192
+#define CURVE_SECP192R1_Q_BITLEN 192
+
+#ifndef SKIP_DATA
 
 static const u8 secp192r1_p[] = {
 	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
@@ -28,7 +31,6 @@ static const u8 secp192r1_p[] = {
 
 TO_EC_STR_PARAM(secp192r1_p);
 
-#define CURVE_SECP192R1_P_BITLEN 192
 static const u8 secp192r1_p_bitlen[] = { 0xc0 };
 
 TO_EC_STR_PARAM(secp192r1_p_bitlen);
@@ -219,7 +221,6 @@ static const u8 secp192r1_order[] = {
 
 TO_EC_STR_PARAM(secp192r1_order);
 
-#define CURVE_SECP192R1_Q_BITLEN 192
 static const u8 secp192r1_order_bitlen[] = {
 	0xc0
 };
@@ -265,7 +266,7 @@ static const ec_str_params secp192r1_str_params = {
  &secp192r1_oid_str_param,
 #endif /* !NO_OIDS */
 #ifndef NO_NAMES
- &ecp192r1_name_str_param,
+ &secp192r1_name_str_param,
 #endif /* !NO_NAMES */
 #else
 	.p = &secp192r1_p_str_param,
@@ -290,6 +291,8 @@ static const ec_str_params secp192r1_str_params = {
 #endif /* WIN32 */
 };
 
+#endif /* !SKIP_DATA */
+
 /*
  * Compute max bit length of all curves for p and q
  */
@@ -307,7 +310,5 @@ static const ec_str_params secp192r1_str_params = {
 #undef CURVES_MAX_Q_BIT_LEN
 #define CURVES_MAX_Q_BIT_LEN CURVE_SECP192R1_Q_BITLEN
 #endif
-
-#endif /* __EC_PARAMS_SECP192R1_H__ */
 
 #endif /* WITH_CURVE_SECP192R1 */

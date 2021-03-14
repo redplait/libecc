@@ -16,9 +16,9 @@
 #include "../../lib_ecc_config.h"
 #ifdef WITH_CURVE_FRP256V1
 
-#ifndef __EC_PARAMS_FRP256V1_H__
-#define __EC_PARAMS_FRP256V1_H__
 #include "ec_params_external.h"
+
+#ifndef SKIP_DATA
 
 static const u8 frp256v1_p[] = {
 	0xf1, 0xfd, 0x17, 0x8c, 0x0b, 0x3a, 0xd5, 0x8f,
@@ -211,6 +211,8 @@ static const ec_str_params frp256v1_str_params = {
 #endif /* WIN32 */
 };
 
+#endif /* !SKIP_DATA */
+
 /*
  * Compute max bit length of all curves for p and q
  */
@@ -228,7 +230,5 @@ static const ec_str_params frp256v1_str_params = {
 #undef CURVES_MAX_Q_BIT_LEN
 #define CURVES_MAX_Q_BIT_LEN CURVE_FRP256V1_Q_BITLEN
 #endif
-
-#endif /* __EC_PARAMS_FRP256V1_H__ */
 
 #endif /* WITH_CURVE_FRP256V1 */

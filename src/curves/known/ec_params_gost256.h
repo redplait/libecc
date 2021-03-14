@@ -16,9 +16,12 @@
 #include "../../lib_ecc_config.h"
 #ifdef WITH_CURVE_GOST256
 
-#ifndef __EC_PARAMS_GOST256_H__
-#define __EC_PARAMS_GOST256_H__
 #include "ec_params_external.h"
+
+#define CURVE_GOST256_P_BITLEN 256
+#define CURVE_GOST256_Q_BITLEN 256
+
+#ifndef SKIP_DATA
 
 static const u8 GOST_256bits_curve_p[] = {
 	0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -29,7 +32,6 @@ static const u8 GOST_256bits_curve_p[] = {
 
 TO_EC_STR_PARAM(GOST_256bits_curve_p);
 
-#define CURVE_GOST256_P_BITLEN 256
 static const u8 GOST_256bits_curve_p_bitlen[] = { 0x01, 0x00 };
 
 TO_EC_STR_PARAM(GOST_256bits_curve_p_bitlen);
@@ -144,7 +146,6 @@ static const u8 GOST_256bits_curve_order[] = {
 
 TO_EC_STR_PARAM(GOST_256bits_curve_order);
 
-#define CURVE_GOST256_Q_BITLEN 256
 static const u8 GOST_256bits_curve_order_bitlen[] = { 0x01, 0x00 };
 
 TO_EC_STR_PARAM(GOST_256bits_curve_order_bitlen);
@@ -211,6 +212,8 @@ static const ec_str_params GOST_256bits_curve_str_params = {
 #endif /* WIN32 */
 };
 
+#endif /* !SKIP_DATA */
+
 /*
  * Compute max bit length of all curves for p and q
  */
@@ -228,7 +231,5 @@ static const ec_str_params GOST_256bits_curve_str_params = {
 #undef CURVES_MAX_Q_BIT_LEN
 #define CURVES_MAX_Q_BIT_LEN CURVE_GOST256_Q_BITLEN
 #endif
-
-#endif /* __EC_PARAMS_GOST256_H__ */
 
 #endif /* WITH_CURVE_GOST256 */
