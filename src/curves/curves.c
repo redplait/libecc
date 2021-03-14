@@ -27,7 +27,7 @@
 #include "known/ec_params_gost256.h"
 #include "known/ec_params_gost512.h"
 
-static const ec_mapping ec_maps[] = {
+const ec_mapping ec_maps[] = {
 #ifdef WITH_CURVE_FRP256V1
 	{FRP256V1, &frp256v1_str_params},
 #endif /* WITH_CURVE_FRP256V1 */
@@ -76,6 +76,11 @@ static const ec_mapping ec_maps[] = {
  * ec_maps array above.
  */
 #define EC_CURVES_NUM (sizeof(ec_maps) / sizeof(ec_mapping))
+
+size_t get_ec_maps_size()
+{
+  return EC_CURVES_NUM;
+}
 
 #ifndef NO_NAMES
 /*

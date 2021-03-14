@@ -60,4 +60,8 @@ typedef struct {
 	const ec_str_params *params;
 } ec_mapping;
 
+extern const ec_mapping ec_maps[];
+
+size_t get_ec_maps_size();
+
 #endif /* __CURVES_LIST_H__ */

@@ -20,6 +20,22 @@
 #endif
 #include "../libsig.h"
 
+u8 *my_alloc(u32 size)
+{
+  u8 *res = (u8 *)malloc(size);
+  printf("my_alloc: %X ret %p\n", size, res);
+  return res;
+}
+
+void my_free(void *buf)
+{
+  printf("my_free: %p\n", buf);
+  free(buf);
+}
+
+Tbuf_alloc g_buf_alloc = my_alloc;
+Tbuf_free g_buf_free = my_free;
+
 #define HDR_MAGIC        0x34215609
 
 typedef enum {
@@ -252,7 +268,7 @@ static int generate_and_export_key_pair(const char *ec_name,
 	local_memset(fname, 0, fname_len);
 	local_memcpy(fname, fname_prefix, prefix_len);
 	local_strncat(fname, "_private_key.bin", fname_len - prefix_len);
-	file = fopen(fname, "w");
+	file = fopen(fname, "wb");
 	if (file == NULL) {
 		printf("Error: file %s cannot be opened\n", fname);
 		goto err;
@@ -289,7 +305,7 @@ static int generate_and_export_key_pair(const char *ec_name,
 	local_memset(fname, 0, fname_len);
 	local_memcpy(fname, fname_prefix, prefix_len);
 	local_strncat(fname, "_public_key.bin", fname_len - prefix_len);
-	file = fopen(fname, "w");
+	file = fopen(fname, "wb");
 	if (file == NULL) {
 		printf("Error: file %s cannot be opened\n", fname);
 		goto err;
@@ -341,12 +357,12 @@ static int store_sig(const char *in_fname, const char *out_fname,
 	MUST_HAVE(EC_STRUCTURED_SIG_EXPORT_SIZE(siglen) <= sizeof(buf));
 
 	/* Import the data from the input file */
-	in_file = fopen(in_fname, "r");
+	in_file = fopen(in_fname, "rb");
 	if (in_file == NULL) {
 		printf("Error: file %s cannot be opened\n", in_fname);
 		goto err;
 	}
-	out_file = fopen(out_fname, "w");
+	out_file = fopen(out_fname, "wb");
 	if (out_file == NULL) {
 		printf("Error: file %s cannot be opened\n", out_fname);
 		goto err;
@@ -429,7 +445,7 @@ static int get_file_size(const char *in_fname, size_t *outsz)
 
 	*outsz = 0;
 
-	in_file = fopen(in_fname, "r");
+	in_file = fopen(in_fname, "rb");
 	if (in_file == NULL) {
 		printf("Error: file %s cannot be opened\n", in_fname);
 		goto err;
@@ -556,7 +572,7 @@ static int sign_bin_file(const char *ec_name, const char *ec_sig_name,
 
 	/************************************/
 	/* Import the private key from the file */
-	in_key_file = fopen(in_key_fname, "r");
+	in_key_file = fopen(in_key_fname, "rb");
 	if (in_key_file == NULL) {
 		printf("Error: file %s cannot be opened\n", in_key_fname);
 		goto err;
@@ -623,7 +639,7 @@ static int sign_bin_file(const char *ec_name, const char *ec_sig_name,
 	 * Read file content chunk by chunk up to file length, passing each
 	 * chunk to signature update function
 	 */
-	in_file = fopen(in_fname, "r");
+	in_file = fopen(in_fname, "rb");
 	if (in_file == NULL) {
 		printf("Error: file %s cannot be opened\n", in_fname);
 		goto err;
@@ -691,7 +707,7 @@ static int sign_bin_file(const char *ec_name, const char *ec_sig_name,
 		FILE *out_file;
 		size_t written;
 
-		out_file = fopen(out_fname, "w");
+		out_file = fopen(out_fname, "wb");
 		if (out_file == NULL) {
 			printf("Error: file %s cannot be opened\n", out_fname);
 			goto err;
@@ -793,7 +809,7 @@ static int verify_bin_file(const char *ec_name, const char *ec_sig_name,
 
 	/************************************/
 	/* Import the public key from the file */
-	in_key_file = fopen(in_key_fname, "r");
+	in_key_file = fopen(in_key_fname, "rb");
 	if (in_key_file == NULL) {
 		printf("Error: file %s cannot be opened\n", in_key_fname);
 		goto err;
@@ -818,7 +834,7 @@ static int verify_bin_file(const char *ec_name, const char *ec_sig_name,
 	}
 
 	/* Open main file to verify ... */
-	in_file = fopen(in_fname, "r");
+	in_file = fopen(in_fname, "rb");
 	if (in_file == NULL) {
 		printf("Error: file %s cannot be opened\n", in_fname);
 		goto err;
@@ -941,7 +957,7 @@ static int verify_bin_file(const char *ec_name, const char *ec_sig_name,
 		}
 		siglen = (u8)to_read;
 		/* Read the raw signature from the signature file */
-		in_sig_file = fopen(in_sig_fname, "r");
+		in_sig_file = fopen(in_sig_fname, "rb");
 		if (in_sig_file == NULL) {
 			printf("Error: file %s cannot be opened\n",
 			       in_sig_fname);
@@ -1064,7 +1080,7 @@ static int ec_scalar_mult(const char *ec_name,
 		goto err;
 	}
 	/* Open main file to verify ... */
-	in_file = fopen(scalar_file, "r");
+	in_file = fopen(scalar_file, "rb");
 	if (in_file == NULL) {
 		printf("Error: file %s cannot be opened\n", scalar_file);
 		goto err;
@@ -1090,7 +1106,7 @@ static int ec_scalar_mult(const char *ec_name,
 		goto err;
 	}
 	/* Open main file to verify ... */
-	in_file = fopen(point_file, "r");
+	in_file = fopen(point_file, "rb");
 	if (in_file == NULL) {
 		printf("Error: file %s cannot be opened\n", point_file);
 		goto err;
@@ -1140,7 +1156,7 @@ static int ec_scalar_mult(const char *ec_name,
 		goto err;
 	}
 	/* Now save the coordinates in the output file */
-	out_file = fopen(outfile_name, "w");
+	out_file = fopen(outfile_name, "wb");
 	if (out_file == NULL) {
 		nn_uninit(&d);
 		prj_pt_uninit(&Q);
@@ -1174,7 +1190,7 @@ static void print_curves(void)
        u8 i;
 
        /* Print all the available curves */
-       for (i = 0; i < EC_CURVES_NUM; i++) {
+       for (i = 0; i < get_ec_maps_size(); i++) {
 	       printf("%s ", (const char *)(ec_maps[i].params->name->buf));
        }
 

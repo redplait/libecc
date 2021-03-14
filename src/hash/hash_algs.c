@@ -96,7 +96,7 @@ const hash_mapping hash_maps[] = {
 #ifdef WIN32
  SHA512,	/* SHA512 */
 #ifndef NO_NAMES
- "SHA512"
+ "SHA512",
 #endif
  SHA512_DIGEST_SIZE,
  SHA512_BLOCK_SIZE,
