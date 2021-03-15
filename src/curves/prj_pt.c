@@ -870,7 +870,7 @@ void prj_pt_dbl(prj_pt_t out, prj_pt_src_t in)
 static void _prj_pt_mul_ltr_dbl_add_always(prj_pt_t out, nn_src_t m, prj_pt_src_t in)
 {
 	/* We use Itoh et al. notations here for T and the random r */
-	prj_pt T[3];
+	prj_pt T = NULL;
 	bitcnt_t mlen;
 	int mbit, rbit;
 	/* Random for masking the Double and Add Always algorithm */
@@ -885,6 +885,10 @@ static void _prj_pt_mul_ltr_dbl_add_always(prj_pt_t out, nn_src_t m, prj_pt_src_
 
 	/* Check that the input is on the curve */
 	MUST_HAVE(prj_pt_is_on_curve(in) == 1);
+
+	T = (prj_pt *)g_buf_alloc(3 * sizeof(prj_pt));
+	if ( NULL == T )
+          return;
 	/* Compute m' from m depending on the rule described above */
 	/* First compute q**2 */
 	nn_sqr(&order_square, &(in->crv->order));
@@ -982,6 +986,8 @@ static void _prj_pt_mul_ltr_dbl_add_always(prj_pt_t out, nn_src_t m, prj_pt_src_
 	fp_uninit(&l);
 	nn_uninit(&m_msb_fixed);
 	nn_uninit(&order_square);
+	if ( T != NULL )
+          g_buf_free(T);
 }
 #endif
 
