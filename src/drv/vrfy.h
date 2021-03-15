@@ -1,0 +1,3 @@
+#pragma once
+
+int VerifyFile(PECDSA_DEVICE_EXTENSION, HANDLE, IO_STATUS_BLOCK *);

@@ -1,0 +1,16 @@
+TARGETNAME=ecdsadrv
+TARGETTYPE=DRIVER
+INCLUDES=..
+
+!if "$(_BUILDARCH)"=="AMD64"
+ECLIB=..\..\build\libecc64.lib
+C_DEFINES= $(C_DEFINES) -DWITH_STDLIB -D__x86_64__ -DWIN32 -DNO_NAMES -DNO_OIDS
+!else
+ECLIB=..\..\build\libecc32.lib
+C_DEFINES= $(C_DEFINES) -DWITH_STDLIB -D__i386__ -DWIN32 -DNO_NAMES -DNO_OIDS
+!endif
+
+
+TARGETLIBS=$(DDK_LIB_PATH)\wdmsec.lib $(ECLIB)
+
+SOURCES=drv.c dict.c vrfy.c
