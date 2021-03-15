@@ -698,7 +698,7 @@ int _eckcdsa_verify_finalize(struct ec_verify_context *ctx)
 	u8 tmp_buf[BYTECEIL(CURVES_MAX_P_BIT_LEN)];
 	bitcnt_t q_bit_len, p_bit_len;
 	u8 p_len, r_len;
-	prj_pt sY, eG, Wprime;
+	prj_pt *sY = NULL, *eG, *Wprime;
 	aff_pt Wprime_aff;
 	prj_pt_src_t G, Y;
 	u8 r_prime[MAX_DIGEST_SIZE];
@@ -721,9 +721,17 @@ int _eckcdsa_verify_finalize(struct ec_verify_context *ctx)
 	SIG_VERIFY_CHECK_INITIALIZED(ctx);
 	ECKCDSA_VERIFY_CHECK_INITIALIZED(&(ctx->verify_data.eckcdsa));
 
+        sY = (prj_pt *)g_buf_alloc(3 * sizeof(prj_pt));
+	if ( sY == NULL )
+	{
+		ret = -1;
+		goto err;
+	}
+        eG = sY + 1;
+        Wprime = eG + 1;
         /* Zero init points */
-        local_memset(&sY, 0, sizeof(prj_pt));
-        local_memset(&eG, 0, sizeof(prj_pt));
+        local_memset(sY, 0, sizeof(prj_pt));
+        local_memset(eG, 0, sizeof(prj_pt));
 
 	/* Make things more readable */
 	pub_key = ctx->pub_key;
@@ -772,14 +780,14 @@ int _eckcdsa_verify_finalize(struct ec_verify_context *ctx)
 	dbg_nn_print("e", &e);
 
 	/* 6. Compute W' = sY + eG, where Y is the public key */
-	prj_pt_mul_monty(&sY, s, Y);
-	prj_pt_mul_monty(&eG, &e, G);
+	prj_pt_mul_monty(sY, s, Y);
+	prj_pt_mul_monty(eG, &e, G);
 	nn_zero(&e);
-	prj_pt_add_monty(&Wprime, &sY, &eG);
-	prj_pt_uninit(&sY);
-	prj_pt_uninit(&eG);
-	prj_pt_to_aff(&Wprime_aff, &Wprime);
-	prj_pt_uninit(&Wprime);
+	prj_pt_add_monty(Wprime, sY, eG);
+	prj_pt_uninit(sY);
+	prj_pt_uninit(eG);
+	prj_pt_to_aff(&Wprime_aff, Wprime);
+	prj_pt_uninit(Wprime);
 	dbg_nn_print("W'_x", &(Wprime_aff.x.fp_val));
 	dbg_nn_print("W'_y", &(Wprime_aff.y.fp_val));
 
@@ -842,6 +850,8 @@ int _eckcdsa_verify_finalize(struct ec_verify_context *ctx)
 	PTR_NULLIFY(s);
 
 err:
+        if ( sY != NULL )
+          g_buf_free(sY);
 	return ret;
 }
 
