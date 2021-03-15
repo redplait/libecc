@@ -23,6 +23,7 @@
 #include "../fp/fp_mul.h"
 #include "../fp/fp_montgomery.h"
 #include "../fp/fp_rand.h"
+#include "../sig/sig_algs_internal.h"
 
 /*
  * If NO_USE_COMPLETE_FORMULAS flag is not defined addition formulas from Algorithm 1
@@ -475,7 +476,7 @@ void prj_pt_dbl_monty(prj_pt_t out, prj_pt_src_t in)
 static void _prj_pt_mul_ltr_monty_dbl_add_always(prj_pt_t out, nn_src_t m, prj_pt_src_t in)
 {
 	/* We use Itoh et al. notations here for T and the random r */
-	prj_pt T[3];
+	prj_pt *T = NULL;
 	bitcnt_t mlen;
 	int mbit, rbit;
 	/* Random for masking the Double and Add Always algorithm */
@@ -490,6 +491,10 @@ static void _prj_pt_mul_ltr_monty_dbl_add_always(prj_pt_t out, nn_src_t m, prj_p
 
 	/* Check that the input is on the curve */
 	MUST_HAVE(prj_pt_is_on_curve(in) == 1);
+
+	T = (prj_pt *)g_buf_alloc(3 * sizeof(prj_pt));
+	if ( T == NULL )
+          return;
 	/* Compute m' from m depending on the rule described above */
 	/* First compute q**2 */
 	nn_sqr(&order_square, &(in->crv->order));
@@ -587,6 +592,8 @@ static void _prj_pt_mul_ltr_monty_dbl_add_always(prj_pt_t out, nn_src_t m, prj_p
 	fp_uninit(&l);
 	nn_uninit(&m_msb_fixed);
 	nn_uninit(&order_square);
+	if ( T != NULL )
+          g_buf_free(T);
 }
 #endif
 
@@ -625,7 +632,7 @@ static void _prj_pt_mul_ltr_monty_dbl_add_always(prj_pt_t out, nn_src_t m, prj_p
 static void _prj_pt_mul_ltr_monty_ladder(prj_pt_t out, nn_src_t m, prj_pt_src_t in)
 {
 	/* We use Itoh et al. notations here for T and the random r */
-	prj_pt T[3];
+	prj_pt *T = NULL;
 	bitcnt_t mlen;
 	int mbit, rbit;
 	/* Random for masking the Montgomery Ladder algorithm */
@@ -641,6 +648,9 @@ static void _prj_pt_mul_ltr_monty_ladder(prj_pt_t out, nn_src_t m, prj_pt_src_t 
 	/* Check that the input is on the curve */
 	MUST_HAVE(prj_pt_is_on_curve(in) == 1);
 
+	T = (prj_pt *)g_buf_alloc(3 * sizeof(prj_pt));
+	if ( T == NULL )
+          return;
 	/* Compute m' from m depending on the rule described above */
 	/* First compute q**2 */
 	nn_sqr(&order_square, &(in->crv->order));
@@ -756,6 +766,8 @@ static void _prj_pt_mul_ltr_monty_ladder(prj_pt_t out, nn_src_t m, prj_pt_src_t 
 	fp_uninit(&l);
 	nn_uninit(&m_msb_fixed);
 	nn_uninit(&order_square);
+	if ( T != NULL )
+          g_buf_free(T);
 }
 #endif
 

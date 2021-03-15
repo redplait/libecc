@@ -22,6 +22,7 @@
 #include "../fp/fp_mul.h"
 #include "../fp/fp_montgomery.h"
 #include "../fp/fp_rand.h"
+#include "../sig/sig_algs_internal.h"
 
 #define PRJ_PT_MAGIC ((word_t)(0xe1cd70babb1d5afeULL))
 
@@ -1019,7 +1020,7 @@ static void _prj_pt_mul_ltr_dbl_add_always(prj_pt_t out, nn_src_t m, prj_pt_src_
 static void _prj_pt_mul_ltr_ladder(prj_pt_t out, nn_src_t m, prj_pt_src_t in)
 {
 	/* We use Itoh et al. notations here for T and the random r */
-	prj_pt T[3];
+	prj_pt *T = NULL;
 	bitcnt_t mlen;
 	int mbit, rbit;
 	/* Random for masking the Montgomery Ladder algorithm */
@@ -1035,6 +1036,9 @@ static void _prj_pt_mul_ltr_ladder(prj_pt_t out, nn_src_t m, prj_pt_src_t in)
 	/* Check that the input is on the curve */
 	MUST_HAVE(prj_pt_is_on_curve(in) == 1);
 
+	T = (prj_pt *)g_buf_alloc(3 * sizeof(prj_pt));
+	if ( T == NULL )
+          return;
 	/* Compute m' from m depending on the rule described above */
 	/* First compute q**2 */
 	nn_sqr(&order_square, &(in->crv->order));
@@ -1080,12 +1084,12 @@ static void _prj_pt_mul_ltr_ladder(prj_pt_t out, nn_src_t m, prj_pt_src_t in)
 	rbit = nn_getbit(&r, mlen);
 
 	/* Initialize points */
-	prj_pt_init(&T[0], in->crv);
-	prj_pt_init(&T[1], in->crv);
-	prj_pt_init(&T[2], in->crv);
+	prj_pt_init(T, in->crv);
+	prj_pt_init(T + 1, in->crv);
+	prj_pt_init(T + 2, in->crv);
 
 	/* Initialize T[r[n-1]] to input point */
-	prj_pt_copy(&T[rbit], in);
+	prj_pt_copy(T + rbit, in);
         /* Blind the point with projective coordinates (X, Y, Z) => (l*X, l*Y, l*Z)
          */
         fp_mul(&(T[rbit].X), &(T[rbit].X), &l);
@@ -1150,6 +1154,8 @@ static void _prj_pt_mul_ltr_ladder(prj_pt_t out, nn_src_t m, prj_pt_src_t in)
 	fp_uninit(&l);
 	nn_uninit(&m_msb_fixed);
 	nn_uninit(&order_square);
+	if ( T != NULL )
+          g_buf_free(T);
 }
 #endif
 
