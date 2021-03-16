@@ -27,12 +27,27 @@ PDEVICE_OBJECT gpDeviceObject = NULL;
 
 u8 *my_ecc_alloc(u32 size)
 {
-  return ExAllocatePoolWithTag(PagedPool, size, 'LEcc');
+  PECDSA_DEVICE_EXTENSION ext = NULL;
+  u8 *res = ExAllocatePoolWithTag(PagedPool, size, 'LEcc');
+  if ( gpDeviceObject != NULL )
+    ext = (PECDSA_DEVICE_EXTENSION)gpDeviceObject->DeviceExtension;
+  if ( ext != NULL ) 
+  {
+    InterlockedIncrement(&ext->ecdsa_astat.allocs);
+    if ( res == NULL )
+      InterlockedIncrement(&ext->ecdsa_astat.bad_allocs);
+  }
+  return res;
 }
 
 void my_ecc_free(u8 *mem)
 {
+  PECDSA_DEVICE_EXTENSION ext = NULL;
   ExFreePoolWithTag(mem, 'LEcc');
+  if ( gpDeviceObject != NULL )
+    ext = (PECDSA_DEVICE_EXTENSION)gpDeviceObject->DeviceExtension;
+  if ( ext != NULL )
+    InterlockedIncrement(&ext->ecdsa_astat.frees);
 }
 
 void * __fastcall my_dict_alloc(size_t size)
@@ -242,7 +257,7 @@ NTSTATUS KDispatchIoctl(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
 
   switch(irpStack->Parameters.DeviceIoControl.IoControlCode)
   {
-    case IOCTL_TEST_IOCTL:
+    case IOCTL_TEST:
       if ( (pOutputBuffer == NULL) ||
            (irpStack->Parameters.DeviceIoControl.OutputBufferLength < sizeof(int))
          )
@@ -252,7 +267,23 @@ NTSTATUS KDispatchIoctl(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
       }
       *(int *)pOutputBuffer = res;
       dwBytesWritten = sizeof(int);
-     break;
+      Status = STATUS_SUCCESS;
+     break; /* IOCTL_TEST */
+
+    case IOCTL_GET_ECDSA_ALLOCSTAT:
+      if ( (pOutputBuffer == NULL) ||
+           (irpStack->Parameters.DeviceIoControl.OutputBufferLength < sizeof(struct alloc_stat))
+         )
+      {
+        Status = STATUS_BUFFER_TOO_SMALL;
+	break;
+      } else {
+        struct alloc_stat *as = (struct alloc_stat *)pOutputBuffer;
+        *as = ext->ecdsa_astat;
+        dwBytesWritten = sizeof(*as);
+        Status = STATUS_SUCCESS;
+      }
+     break; /* IOCTL_GET_ECDSA_ALLOCSTAT */
 
     default:
      Status = STATUS_INVALID_DEVICE_REQUEST;
@@ -356,6 +387,7 @@ DriverEntry(
     Status = STATUS_NO_MEMORY;
     goto free_res;
   }
+  pExt->ecdsa_astat.allocs = pExt->ecdsa_astat.bad_allocs = pExt->ecdsa_astat.frees = 0;
   // register process ntfy
   Status = PsSetCreateProcessNotifyRoutine(ProcessCallback, FALSE);
   if ( !NT_SUCCESS(Status) )

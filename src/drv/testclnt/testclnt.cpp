@@ -138,6 +138,7 @@ int wmain(int argc, wchar_t **argv)
     }
   } else if ( uninstall )
   {
+    StopDriver(hSCManager, drv_name);
     DWORD err = RemoveDriver(hSCManager, drv_name);
     if ( err != NO_ERROR )
     {
@@ -170,12 +171,24 @@ int wmain(int argc, wchar_t **argv)
        goto exit;
      }
      // send IOCTL_TEST_IOCTL
-     DeviceIoControl(drv, IOCTL_TEST_IOCTL, NULL, 0, &res, sizeof(res), &written, NULL);
+     DeviceIoControl(drv, IOCTL_TEST, NULL, 0, &res, sizeof(res), &written, NULL);
      if ( written != sizeof(res) )
      {
        printf("IOCTL_TEST_IOCTL failed, error %d\n", GetLastError());
-     } else
+     } else {
        printf("IOCTL_TEST_IOCTL return %d\n", res);
+       // gather allocation stat
+       alloc_stat stat;
+       written = 0;
+       DeviceIoControl(drv, IOCTL_GET_ECDSA_ALLOCSTAT, NULL, 0, &stat, sizeof(stat), &written, NULL);
+       if ( written == sizeof(stat) )
+       {
+         printf("allocs: %X\n", stat.allocs);
+         printf("bad_allocs: %X\n", stat.bad_allocs);
+         printf("frees:  %X\n", stat.frees);
+       } else
+         printf("IOCTL_GET_ECDSA_ALLOCSTAT failed, error %d\n", GetLastError());
+     }
 exit:
      if ( drv != INVALID_HANDLE_VALUE )
        CloseHandle(drv);

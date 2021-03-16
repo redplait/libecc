@@ -5,7 +5,7 @@
 
 #define FILE_BUFFER_SIZE (2 * PAGE_SIZE)
 #define FILE_MAX_SIZE (1024 * 1024 * 1024) // 1 GB
-#define ALLOWED_CLIENTS	2
+#define ALLOWED_CLIENTS 	2
 // my allocator methods
 #define VRFY_POOL_TAG 'EDSA'
 
