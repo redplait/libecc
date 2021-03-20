@@ -242,9 +242,15 @@ NTSTATUS KDispatchIoctl(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
         &iosb, NULL, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_READ, FILE_OPEN,
         FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT, NULL, 0);
       if ( !NT_SUCCESS(Status) )
+      {
+        if (processFileName != NULL)
+          ExFreePool(processFileName);
         goto end;
+      }
       res = VerifyFile(ext, fileHandle, &iosb);
       ZwClose(fileHandle);
+      if (processFileName != NULL)
+        ExFreePool(processFileName);
       if ( res )
         add_pid(ext, pid, res);
       if ( res < 1 )
